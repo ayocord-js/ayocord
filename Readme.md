@@ -10,7 +10,7 @@ I always write handlers for my bots and it was really boring and sometimes hard
 Also for Each command you must create many files
 
 Check this screen:
-<img src="https://imgur.com/GAMOvjH">
+<img src="https://i.imgur.com/GAMOvjH.png">
 
 You can see a lot of commands/components/events file
 
