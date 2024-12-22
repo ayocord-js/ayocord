@@ -10,3 +10,39 @@ I always write handlers for my bots and it was really boring and sometimes hard
 Also for Each command you must create many files
 
 Check this screen:
+<img src="https://imgur.com/GAMOvjH">
+
+You can see a lot of commands/components/events file
+
+My library solve this problem
+
+## Features
+
+- TypeSafe
+- Discord Entity decorators
+- Modules
+- Views 
+
+## ToDo
+
+### Launcher
+
+- DiscordClient ❌
+- AutoLoader ❌
+- DiscordFactory ❌
+- EventHandler ❌
+- InteractionHandler ❌
+
+### Decorators
+
+- Event ❌
+- SlashCommand ❌
+- TextCommand ❌
+- Param ❌
+- AutoComplete ❌
+- Button ❌
+- Modal ❌
+- StringSelect ❌
+- RoleSelect ❌
+- ChannelSelect ❌
+
