@@ -28,7 +28,7 @@ My library solve this problem
 ### Launcher
 
 - DiscordClient ✅
-- AutoLoader ❌
+- DiscordCollector ❌
 - DiscordFactory ✅
 
 
