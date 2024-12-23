@@ -30,8 +30,13 @@ My library solve this problem
 - DiscordClient ✅
 - AutoLoader ❌
 - DiscordFactory ✅
+
+
+### Handlers
+
 - EventHandler ✅
 - InteractionHandler ❌
+- TextCommandHandler ❌
 
 ### Decorators
 
