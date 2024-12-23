@@ -1,4 +1,10 @@
-import { ClientOptions, Snowflake } from "discord.js";
+import {
+  BitFieldResolvable,
+  ClientOptions,
+  GatewayIntentBits,
+  GatewayIntentsString,
+  Snowflake,
+} from "discord.js";
 import { Logger } from "ayologger";
 import { AbstractModule } from "@/abstractions/module.abstract";
 
@@ -31,6 +37,7 @@ export type EventCollection = Record<string, IEvent>;
 export type AutoCompleteCollection = Record<string, IAutoComplete>;
 
 export interface IDiscordClientOptions extends ClientOptions {
+  intents: BitFieldResolvable<GatewayIntentsString, number>;
   /**
    * How you call your sheep then he swim
    */
@@ -55,7 +62,7 @@ export interface IDiscordClientOptions extends ClientOptions {
       parentClass?: typeof AbstractModule;
     };
     /**
-     * Path to you module dir
+     * Path to your module dir
      */
     moduleDir?: string;
   };
@@ -67,6 +74,10 @@ export interface IDiscordClientOptions extends ClientOptions {
    * Would you like to use custom logger or our ayologger - your choice
    */
   logger?: typeof Logger;
+  /**
+   * Used for text commands
+   */
+  prefix?: string;
   /**
    * Collection of modules
    */
