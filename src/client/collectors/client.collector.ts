@@ -10,6 +10,10 @@ export interface IDecoratorMetadataKeys {
   method: unknown;
 }
 
+/**
+ * Core class for collecting everything in your project
+ */
+
 export class DiscordCollector {
   private client: DiscordClient;
 
@@ -17,9 +21,6 @@ export class DiscordCollector {
     this.client = client;
   }
 
-  /**
-   * Collect and process all modules from the file system.
-   */
   async collect(): Promise<void> {
     const files = await glob("**/*.{ts,js}", {
       ignore: ["**/node_modules/**"],
@@ -41,22 +42,16 @@ export class DiscordCollector {
     }
   }
 
-  /**
-   * Check if a value is a valid module extending AbstractModule.
-   */
-  private isValidModule(value: any): value is typeof AbstractModule {
+  protected isValidModule(value: any): value is typeof AbstractModule {
     const inheritClass =
-      this.client.options.loader?.auto?.parentClass || AbstractModule;
+      this.client.loader?.auto?.parentClass || AbstractModule;
 
     return (
       typeof value === "function" && value.prototype instanceof inheritClass
     );
   }
 
-  /**
-   * Process a valid module: add events, commands, and auto-complete handlers to the client.
-   */
-  private async processModule(
+  protected async processModule(
     ModuleClass: typeof AbstractModule
   ): Promise<void> {
     const moduleInstance = new ModuleClass({
@@ -71,18 +66,18 @@ export class DiscordCollector {
     ]);
   }
 
-  private getModuleName(module: AbstractModule) {
+  protected getModuleName(module: AbstractModule) {
     return String(module.options.name || module.constructor.name.toLowerCase());
   }
 
-  private addModule(module: AbstractModule) {
-    this.client.options.modules!.set(this.getModuleName(module), {
+  protected addModule(module: AbstractModule) {
+    this.client.modules.set(this.getModuleName(module), {
       isEnabled: true,
       module: module,
     });
   }
 
-  private getMetadata<T>(
+  protected getMetadata<T>(
     module: AbstractModule,
     metadataKey: MetadataKeys,
     methods: IDecoratorMetadataKeys[]
@@ -97,10 +92,7 @@ export class DiscordCollector {
       .filter((value) => value !== null);
   }
 
-  /**
-   * Add events from the module to the client's cache.
-   */
-  private addEvents(
+  protected addEvents(
     module: AbstractModule,
     metadataKey: MetadataKeys,
     methods: IDecoratorMetadataKeys[]
@@ -113,18 +105,14 @@ export class DiscordCollector {
     metadata.map((event) => {
       // @ts-ignore
       const boundMethod = event.method!.bind(module);
-      this.client.options.events!.set(
+      this.client.events.set(
         `${this.getModuleName(module)}_${event.metadata.name}`,
-        // @ts-ignore
-        { options: event.metadata, executor: boundMethod }
+        { options: event.metadata, executor: boundMethod, module }
       );
     });
   }
 
-  /**
-   * Add commands from the module to the client's cache.
-   */
-  private addCommands(
+  protected addCommands(
     module: AbstractModule,
     metadataKey: MetadataKeys,
     methods: IDecoratorMetadataKeys[]
@@ -132,10 +120,7 @@ export class DiscordCollector {
     // Implement command handling logic here
   }
 
-  /**
-   * Add auto-complete handlers from the module to the client's cache.
-   */
-  private addAutoComplete(
+  protected addAutoComplete(
     module: AbstractModule,
     metadataKey: MetadataKeys,
     methods: IDecoratorMetadataKeys[]
@@ -143,10 +128,7 @@ export class DiscordCollector {
     // Implement auto-complete handling logic here
   }
 
-  /**
-   * Getting methods for check their metadata
-   */
-  private getModuleMethods(module: AbstractModule): IDecoratorMetadataKeys[] {
+  protected getModuleMethods(module: AbstractModule): IDecoratorMetadataKeys[] {
     const prototype = Object.getPrototypeOf(module);
     return Object.getOwnPropertyNames(prototype)
       .filter((key) => {

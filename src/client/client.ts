@@ -1,54 +1,72 @@
-import { Client, Collection } from "discord.js";
 import {
-  IAutoCompleteEntity,
-  ICommandEntity,
+  Client,
+  Collection,
+  ClientOptions,
+  GatewayIntentsString,
+  Snowflake,
+} from "discord.js";
+import { Logger } from "ayologger";
+import { AbstractModule } from "@/abstractions/module.abstract";
+import {
+  AutoCompleteCollection,
+  CommandCollection,
+  EventCollection,
   IDiscordClientOptions,
-  IEventEntity,
-  IModule,
+  ModuleCollection,
 } from "./types/client.types";
 
 export class DiscordClient extends Client {
-  /**
-   * IDK how to correctly use types here
-   */
-  // @ts-ignore
-  public options: IDiscordClientOptions;
+  public modules: ModuleCollection;
+  public commands: CommandCollection;
+  public events: EventCollection;
+  public autoComplete: AutoCompleteCollection;
+  public applicationName?: string;
+  public version?: string;
+  public loader?: {
+    auto?: {
+      isEnabled: boolean;
+      parentClass?: typeof AbstractModule;
+    };
+    moduleDir?: string;
+  };
+  public devs?: Snowflake[];
+  public logger?: typeof Logger;
+  public prefix?: string;
 
   constructor(options: IDiscordClientOptions) {
-    super({ ...options });
+    super({
+      ...options,
+    });
 
-    this.options = { ...options };
-    this.options.modules = new Collection<string, IModule>();
-    this.options.events = new Collection<string, IEventEntity>();
-    this.options.commands = new Collection<string, ICommandEntity>();
-    this.options.autoComplete = new Collection<string, IAutoCompleteEntity>();
+    this.modules = new Collection();
+    this.events = new Collection();
+    this.commands = new Collection();
+    this.autoComplete = new Collection();
+
+    this.applicationName = options.applicationName;
+    this.version = options.version;
+    this.loader = options.loader;
+    this.devs = options.devs;
+    this.logger = options.logger;
+    this.prefix = options.prefix;
   }
 
   private checkExistedModule(name: string) {
-    const module = this.options.modules?.get(name);
+    const module = this.modules.get(name);
     if (!module) throw new Error("Module with this name does not exist.");
     return module;
   }
 
-  /**
-   * We recommend you use it for developer commands!
-   */
   async moduleEnable(name: string) {
     const module = this.checkExistedModule(name);
-    this.options.modules!.set(name, { ...module, isEnabled: true });
-
+    this.modules.set(name, { ...module, isEnabled: true });
     await module.module.onEnable(this);
   }
 
-  /**
-   * We recommend you use it for developer commands!
-   */
   async moduleDisable(name: string) {
     const module = this.checkExistedModule(name);
     if (!module) return;
-
-    this.options.modules!.set(name, { ...module, isEnabled: false });
-
+    this.modules.set(name, { ...module, isEnabled: false });
     await module.module.onDisable(this);
   }
 }

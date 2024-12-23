@@ -17,10 +17,16 @@ export const Event = (options: IEventOptions) => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     const originalMethod = descriptor.value;
     Reflect.defineMetadata(MetadataKeys.EVENT, options, target, propertyKey);
-    descriptor.value = async (...args: unknown[]) => {
-      const result = await originalMethod.apply(this, ...args);
-      return result;
+    descriptor.value = async function (...args: unknown[]) {
+      try {
+        const result = await originalMethod.apply(this, args);
+        return result;
+      } catch (e) {
+        console.error("Error in event handler:", e);
+        throw e;
+      }
     };
+
     return descriptor;
   };
 };
