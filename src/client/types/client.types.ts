@@ -7,33 +7,47 @@ import {
 } from "discord.js";
 import { Logger } from "ayologger";
 import { AbstractModule } from "@/abstractions/module.abstract";
+import {
+  IAutoCompleteOptions,
+  IEventOptions,
+  ISlashCommandOptions,
+  ITextCommandOptions,
+} from "../decorators";
 
 export interface IModule {
   isEnabled: boolean;
   module: AbstractModule;
 }
 
-export type DiscordExecutor = () => Promise<any>;
+export type DiscordExecutor = (...args: unknown[]) => Promise<any>;
 
-export interface ICommand {
-  module: keyof IDiscordClientOptions["modules"];
+export interface IDiscordEntity {
+  module: AbstractModule;
   executor: DiscordExecutor;
 }
 
-export interface IEvent {
-  module: keyof IDiscordClientOptions["modules"];
-  executor: DiscordExecutor;
+export interface IEventEntity extends IDiscordEntity {
+  options: IEventOptions;
 }
 
-export interface IAutoComplete {
-  module: keyof IDiscordClientOptions["modules"];
-  executor: DiscordExecutor;
+export enum CommandType {
+  SLASH = 0,
+  TEXT = 1,
+}
+
+export interface ICommandEntity extends IDiscordEntity {
+  type: CommandType;
+  options: ISlashCommandOptions | ITextCommandOptions;
+}
+
+export interface IAutoCompleteEntity extends IDiscordEntity {
+  options: IAutoCompleteOptions;
 }
 
 export type ModuleCollection = Collection<string, IModule>;
-export type CommandCollection = Collection<string, ICommand>;
-export type EventCollection = Collection<string, IEvent>;
-export type AutoCompleteCollection = Collection<string, IAutoComplete>;
+export type CommandCollection = Collection<string, ICommandEntity>;
+export type EventCollection = Collection<string, IEventEntity>;
+export type AutoCompleteCollection = Collection<string, IAutoCompleteEntity>;
 
 export interface IDiscordClientOptions extends ClientOptions {
   intents: BitFieldResolvable<GatewayIntentsString, number>;

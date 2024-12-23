@@ -1,9 +1,9 @@
 import { Client, Collection } from "discord.js";
 import {
-  IAutoComplete,
-  ICommand,
+  IAutoCompleteEntity,
+  ICommandEntity,
   IDiscordClientOptions,
-  IEvent,
+  IEventEntity,
   IModule,
 } from "./types/client.types";
 
@@ -18,10 +18,10 @@ export class DiscordClient extends Client {
     super({ ...options });
 
     this.options = { ...options };
-    this.options.modules = new Collection<string, IModule>()
-    this.options.events = new Collection<string, IEvent>();
-    this.options.commands = new Collection<string, ICommand>();
-    this.options.autoComplete = new Collection<string, IAutoComplete>();
+    this.options.modules = new Collection<string, IModule>();
+    this.options.events = new Collection<string, IEventEntity>();
+    this.options.commands = new Collection<string, ICommandEntity>();
+    this.options.autoComplete = new Collection<string, IAutoCompleteEntity>();
   }
 
   private checkExistedModule(name: string) {

@@ -1,3 +1,5 @@
+export interface IAutoCompleteOptions{}
+
 /**
  * This decorator allow handle you an autocomplete
  */
