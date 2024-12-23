@@ -19,7 +19,7 @@ My library solve this problem
 ## Features
 
 - TypeSafe
-- Discord Entity decorators
+- Discord Entity decorators (class and method ways)
 - Modules
 - Views 
 
