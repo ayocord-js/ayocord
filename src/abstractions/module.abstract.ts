@@ -1,4 +1,4 @@
-import { DiscordClient } from "@/discord/discord.client";
+import { DiscordClient } from "@/client/client";
 
 export interface IModuleOptions {
   name?: string;

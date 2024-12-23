@@ -1,2 +1,2 @@
 export * from "ayologger";
-export * from "@/discord";
+export * from "@/client";

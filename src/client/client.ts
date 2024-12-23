@@ -1,5 +1,5 @@
-import { Client, IntentsBitField } from "discord.js";
-import { IDiscordClientOptions } from "./discord-client.types";
+import { Client } from "discord.js";
+import { IDiscordClientOptions } from "./types/client.types";
 
 export class DiscordClient extends Client {
   /**

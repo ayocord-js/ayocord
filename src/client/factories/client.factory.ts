@@ -1,5 +1,5 @@
-import { IDiscordClientOptions } from "./discord-client.types";
-import { DiscordClient } from "./discord.client";
+import { IDiscordClientOptions } from "../types/client.types";
+import { DiscordClient } from "../client";
 
 export class DiscordFactory {
   /**

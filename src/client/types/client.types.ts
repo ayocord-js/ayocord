@@ -1,7 +1,6 @@
 import {
   BitFieldResolvable,
   ClientOptions,
-  GatewayIntentBits,
   GatewayIntentsString,
   Snowflake,
 } from "discord.js";
