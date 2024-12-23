@@ -8,12 +8,10 @@ export class EventHandler {
         const { options, executor } = event;
         if (options.once) {
           client.once(options.name, async (...args: unknown[]) => {
-            // console.log(args);
             return await executor(...args);
           });
         } else {
           client.on(options.name, async (...args: unknown[]) => {
-            // console.log(args);
             return await executor(...args);
           });
         }

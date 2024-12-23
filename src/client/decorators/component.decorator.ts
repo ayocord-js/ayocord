@@ -13,7 +13,7 @@ export interface IComponentOptions {
 }
 
 /**
- * This universal decorator allow handle any component
+ * This an universal decorator allow handle any component
  */
 export const Component = (options: IComponentOptions) => {
   return () => {};
