@@ -1,6 +1,7 @@
 import { IDiscordClientOptions } from "../types/client.types";
 import { DiscordClient } from "../client";
 import { DiscordCollector } from "../collectors/client.collector";
+import { EventHandler } from "../handlers";
 
 export class DiscordFactory {
   /**
@@ -12,7 +13,14 @@ export class DiscordFactory {
   public static async create(options: IDiscordClientOptions) {
     const client = new DiscordClient({ ...options });
     const collector = new DiscordCollector(client);
-    await collector.collect();
+    /**
+     * Collecting entities (e.g. slash_commands or events)
+     */
+    await collector.collect()
+    /**
+     * Connecting handlers
+     */
+    await Promise.all([EventHandler.handle(client)]);
     return client;
   }
 }

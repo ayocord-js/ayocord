@@ -2,6 +2,13 @@ import { glob } from "glob";
 import path from "path";
 import { DiscordClient } from "../client";
 import { AbstractModule } from "@/abstractions/module.abstract";
+import { MetadataKeys } from "../types/metadata-keys.enum";
+import { IEventOptions } from "../decorators";
+
+export interface IDecoratorMetadataKeys {
+  key: string;
+  method: unknown;
+}
 
 export class DiscordCollector {
   private client: DiscordClient;
@@ -55,11 +62,12 @@ export class DiscordCollector {
     const moduleInstance = new ModuleClass({
       ...ModuleClass.prototype.options,
     });
+    const methods = this.getModuleMethods(moduleInstance);
     await Promise.all([
       this.addModule(moduleInstance),
-      this.addEvents(moduleInstance),
-      this.addCommands(moduleInstance),
-      this.addAutoComplete(moduleInstance),
+      this.addEvents(moduleInstance, MetadataKeys.EVENT, methods),
+      this.addCommands(moduleInstance, MetadataKeys.EVENT, methods),
+      this.addAutoComplete(moduleInstance, MetadataKeys.EVENT, methods),
     ]);
   }
 
@@ -67,31 +75,84 @@ export class DiscordCollector {
     return String(module.options.name || module.constructor.name.toLowerCase());
   }
 
-  private async addModule(module: AbstractModule) {
+  private addModule(module: AbstractModule) {
     this.client.options.modules!.set(this.getModuleName(module), {
       isEnabled: true,
       module: module,
     });
   }
 
+  private getMetadata<T>(
+    module: AbstractModule,
+    metadataKey: MetadataKeys,
+    methods: IDecoratorMetadataKeys[]
+  ): { metadata: T; method: unknown }[] {
+    const prototype = Object.getPrototypeOf(module);
+    return methods
+      .map((method) => {
+        const { key, method: metadataMethod } = method;
+        const metadata = Reflect.getMetadata(metadataKey, prototype, key);
+        return metadata ? { metadata, method: metadataMethod } : null;
+      })
+      .filter((value) => value !== null);
+  }
+
   /**
    * Add events from the module to the client's cache.
    */
-  private async addEvents(module: AbstractModule): Promise<void> {
-    // Implement event handling logic here
+  private addEvents(
+    module: AbstractModule,
+    metadataKey: MetadataKeys,
+    methods: IDecoratorMetadataKeys[]
+  ): void {
+    const metadata = this.getMetadata<IEventOptions>(
+      module,
+      metadataKey,
+      methods
+    );
+    metadata.map((event) => {
+      // @ts-ignore
+      const boundMethod = event.method!.bind(module);
+      this.client.options.events!.set(
+        `${this.getModuleName(module)}_${event.metadata.name}`,
+        // @ts-ignore
+        { options: event.metadata, executor: boundMethod }
+      );
+    });
   }
 
   /**
    * Add commands from the module to the client's cache.
    */
-  private async addCommands(module: AbstractModule): Promise<void> {
+  private addCommands(
+    module: AbstractModule,
+    metadataKey: MetadataKeys,
+    methods: IDecoratorMetadataKeys[]
+  ): void {
     // Implement command handling logic here
   }
 
   /**
    * Add auto-complete handlers from the module to the client's cache.
    */
-  private async addAutoComplete(module: AbstractModule): Promise<void> {
+  private addAutoComplete(
+    module: AbstractModule,
+    metadataKey: MetadataKeys,
+    methods: IDecoratorMetadataKeys[]
+  ): void {
     // Implement auto-complete handling logic here
+  }
+
+  /**
+   * Getting methods for check their metadata
+   */
+  private getModuleMethods(module: AbstractModule): IDecoratorMetadataKeys[] {
+    const prototype = Object.getPrototypeOf(module);
+    return Object.getOwnPropertyNames(prototype)
+      .filter((key) => {
+        const property = prototype[key];
+        return typeof property === "function" && key !== "constructor";
+      })
+      .map((key) => ({ key, method: prototype[key] }));
   }
 }
