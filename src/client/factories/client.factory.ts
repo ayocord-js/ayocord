@@ -1,5 +1,6 @@
 import { IDiscordClientOptions } from "../types/client.types";
 import { DiscordClient } from "../client";
+import { DiscordCollector } from "../collectors/client.collector";
 
 export class DiscordFactory {
   /**
@@ -10,6 +11,8 @@ export class DiscordFactory {
    */
   public static async create(options: IDiscordClientOptions) {
     const client = new DiscordClient({ ...options });
+    const collector = new DiscordCollector(client);
+    await collector.collect();
     return client;
   }
 }

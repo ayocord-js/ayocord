@@ -1,6 +1,7 @@
 import {
   BitFieldResolvable,
   ClientOptions,
+  Collection,
   GatewayIntentsString,
   Snowflake,
 } from "discord.js";
@@ -11,8 +12,6 @@ export interface IModule {
   isEnabled: boolean;
   module: AbstractModule;
 }
-
-export type ModuleCollection = Record<string, IModule>;
 
 export type DiscordExecutor = () => Promise<any>;
 
@@ -31,9 +30,10 @@ export interface IAutoComplete {
   executor: DiscordExecutor;
 }
 
-export type CommandCollection = Record<string, ICommand>;
-export type EventCollection = Record<string, IEvent>;
-export type AutoCompleteCollection = Record<string, IAutoComplete>;
+export type ModuleCollection = Collection<string, IModule>;
+export type CommandCollection = Collection<string, ICommand>;
+export type EventCollection = Collection<string, IEvent>;
+export type AutoCompleteCollection = Collection<string, IAutoComplete>;
 
 export interface IDiscordClientOptions extends ClientOptions {
   intents: BitFieldResolvable<GatewayIntentsString, number>;

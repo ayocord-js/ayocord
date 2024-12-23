@@ -1,5 +1,11 @@
-import { Client } from "discord.js";
-import { IDiscordClientOptions } from "./types/client.types";
+import { Client, Collection } from "discord.js";
+import {
+  IAutoComplete,
+  ICommand,
+  IDiscordClientOptions,
+  IEvent,
+  IModule,
+} from "./types/client.types";
 
 export class DiscordClient extends Client {
   /**
@@ -12,10 +18,14 @@ export class DiscordClient extends Client {
     super({ ...options });
 
     this.options = { ...options };
+    this.options.modules = new Collection<string, IModule>()
+    this.options.events = new Collection<string, IEvent>();
+    this.options.commands = new Collection<string, ICommand>();
+    this.options.autoComplete = new Collection<string, IAutoComplete>();
   }
 
   private checkExistedModule(name: string) {
-    const module = this.options.modules?.[name];
+    const module = this.options.modules?.get(name);
     if (!module) throw new Error("Module with this name does not exist.");
     return module;
   }
@@ -25,7 +35,7 @@ export class DiscordClient extends Client {
    */
   async moduleEnable(name: string) {
     const module = this.checkExistedModule(name);
-    this.options.modules![name] = { ...module, isEnabled: true };
+    this.options.modules!.set(name, { ...module, isEnabled: true });
 
     await module.module.onEnable(this);
   }
@@ -37,7 +47,7 @@ export class DiscordClient extends Client {
     const module = this.checkExistedModule(name);
     if (!module) return;
 
-    this.options.modules![name] = { ...module, isEnabled: false };
+    this.options.modules!.set(name, { ...module, isEnabled: false });
 
     await module.module.onDisable(this);
   }
