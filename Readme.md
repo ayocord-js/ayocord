@@ -27,15 +27,15 @@ My library solve this problem
 
 ### Launcher
 
-- DiscordClient ❌
+- DiscordClient ✅
 - AutoLoader ❌
-- DiscordFactory ❌
-- EventHandler ❌
+- DiscordFactory ✅
+- EventHandler ✅
 - InteractionHandler ❌
 
 ### Decorators
 
-- Event ❌
+- Event ✅
 - SlashCommand ❌
 - TextCommand ❌
 - Param ❌
