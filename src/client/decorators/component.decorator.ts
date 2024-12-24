@@ -1,5 +1,13 @@
 // TODO: implement it
 
+import {
+  AnySelectMenuInteraction,
+  ButtonInteraction,
+  ModalSubmitInteraction,
+} from "discord.js";
+import { MetadataKeys } from "../types/metadata-keys.enum";
+import { CustomIdParser } from "@/utils/parsers/custom-id.parser";
+
 export interface IComponentOptions {
   customId: string;
   /**
@@ -19,10 +27,28 @@ export interface IComponentOptions {
 /**
  * This an universal decorator allow handle any component
  */
+export type TComponentInteraction =
+  | AnySelectMenuInteraction
+  | ButtonInteraction
+  | ModalSubmitInteraction;
 export const Component = (options: IComponentOptions) => {
-  return (
-    target: any,
-    propertyKey: string,
-    descriptor: PropertyDescriptor
-  ) => {};
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+    const originalMethod = descriptor.value;
+    Reflect.defineMetadata(
+      MetadataKeys.COMPONENT,
+      options,
+      target,
+      propertyKey
+    );
+    descriptor.value = async (interaction: TComponentInteraction) => {
+      try {
+        const args = CustomIdParser.parseArguments(interaction.customId);
+        const result = await originalMethod.apply(this, interaction, args);
+        return result;
+      } catch (e) {
+        console.error(`Eror in component decorator: ${e}`);
+      }
+    };
+    return descriptor;
+  };
 };
