@@ -3,8 +3,8 @@ import { CanUse } from "../types";
 
 export const Guard = (...guards: CanUse[]) => {
   return async (
-    target: any,
-    propertyKey: string,
+    _target: any,
+    _propertyKey: string,
     descriptor: PropertyDescriptor
   ) => {
     const originalMethod = descriptor.value;
