@@ -37,18 +37,25 @@ My library solve this problem
 - InteractionHandler ❌
 - TextCommandHandler ❌
 
-### Decorators
+### Core Decorators
 
 - Event ✅
 - SlashCommand ❌
 - TextCommand ❌
 - Param ❌
 - AutoComplete ❌
+
+### Views
+
 - Button ❌
 - Modal ❌
 - StringSelect ❌
 - RoleSelect ❌
 - ChannelSelect ❌
+
+### Guards
+
+- Guard ✅
 
 ## Examples
 

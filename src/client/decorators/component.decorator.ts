@@ -10,11 +10,19 @@ export interface IComponentOptions {
    * If enabled this component be used olly by devs from `IDiscordClientOptions`
    */
   isDevOnly?: boolean;
+  /**
+   * If not null the componet will exist only ttl time. P.s. miliseconds
+   */
+  ttl?: number;
 }
 
 /**
  * This an universal decorator allow handle any component
  */
 export const Component = (options: IComponentOptions) => {
-  return () => {};
+  return (
+    target: any,
+    propertyKey: string,
+    descriptor: PropertyDescriptor
+  ) => {};
 };
