@@ -22,7 +22,7 @@ export const Event = (options: IEventOptions) => {
         const result = await originalMethod.apply(this, args);
         return result;
       } catch (e) {
-        console.error("Error in event decorator:", e);
+        // console.error("Error in event decorator:", e);
       }
     };
 

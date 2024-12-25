@@ -20,7 +20,7 @@ export interface IDecoratorMetadataKeys {
  * DiscordCollector is responsible for collecting all modules
  * and processing their methods decorated with @Event and @Component
  */
-export class DiscordCollector {
+export class ModuleDiscordCollector {
   private client: DiscordClient;
 
   constructor(client: DiscordClient) {
@@ -118,18 +118,16 @@ export class DiscordCollector {
     if (!metadata) return;
 
     const boundMethod = (method.method as any).bind(module);
-    const handlerId = `${moduleMetadata.name}_${
-      metadata.name || metadata.customId || metadata.builder.name
-    }`;
 
-    // Set the handler (event or component) to the respective map
     if (metadataKey === MetadataKeys.EVENT) {
+      const handlerId = `${moduleMetadata.name}_${metadata.name}`;
       this.client.events.set(handlerId, {
         executor: boundMethod,
         options: metadata as IEventOptions,
         module: moduleMetadata,
       });
     } else if (metadataKey === MetadataKeys.COMPONENT) {
+      const handlerId = `${metadata.customId}`;
       this.client.components.set(handlerId, {
         executor: boundMethod,
         options: metadata as IComponentOptions,

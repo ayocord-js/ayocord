@@ -68,25 +68,6 @@ export interface IDiscordClientOptions extends ClientOptions {
    */
   version?: string;
   /**
-   * How Client should load your modules. We recomend you use Auto mode or use your custom class. It's easier <3
-   */
-  loader?: {
-    auto?: {
-      /**
-       * Why required? Because I want!
-       */
-      isEnabled: boolean;
-      /**
-       * The class from which can be extend your module
-       */
-      parentClass?: IModule;
-    };
-    /**
-     * Path to your module dir
-     */
-    moduleDir?: string;
-  };
-  /**
    * Who created this bot
    */
   devs?: Snowflake[];

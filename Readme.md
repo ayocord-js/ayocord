@@ -37,12 +37,22 @@ My library solve this problem
 - InteractionHandler ❌
 - TextCommandHandler ❌
 
-### Core Decorators
+### Interaction Decorators
+
+> Methods
 
 - Event ✅
 - SlashCommand ❌
 - TextCommand ❌
-- Param ❌
+- Component ✅
+- AutoComplete ❌
+
+> Class
+
+- Event ❌
+- SlashCommand ❌
+- TextCommand ❌
+- Component ❌
 - AutoComplete ❌
 
 ### Views

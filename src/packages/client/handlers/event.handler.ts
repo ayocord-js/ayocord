@@ -1,7 +1,15 @@
 import { DiscordClient } from "../client";
+import { IHandler } from "../types/handler.interface";
 
-export class EventHandler {
-  static async handle(client: DiscordClient) {
+export class EventHandler implements IHandler {
+  client: DiscordClient;
+  constructor(client: DiscordClient) {
+    this.client = client;
+  }
+  public connect(): void {
+    this.handle(this.client);
+  }
+  private async handle(client: DiscordClient) {
     const events = client.events;
     events.map((event) => {
       try {

@@ -41,10 +41,10 @@ export const Component = (options: IComponentOptions) => {
     descriptor.value = async (interaction: TComponentInteraction) => {
       try {
         const args = CustomIdParser.parseArguments(interaction.customId);
-        const result = await originalMethod.apply(this, interaction, args);
+        const result = await originalMethod.apply(this, [interaction, args]);
         return result;
       } catch (e) {
-        console.error(`Eror in component decorator: ${e}`);
+        // console.error(`Eror in component decorator: ${e}`);
       }
     };
     return descriptor;
