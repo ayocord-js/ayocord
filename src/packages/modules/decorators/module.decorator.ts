@@ -14,7 +14,9 @@ export interface IModuleOptions {
  */
 export const Module = (options: IModuleOptions) => {
   return (target: Function) => {
-    // Сохраняем метаданные для класса
+    /**
+     * Save class metadata
+     */
     Reflect.defineMetadata(MetadataKeys.MODULE, options, target);
   };
 };

@@ -5,8 +5,10 @@ import { MetadataKeys } from "../../../shared/types/metadata-keys.enum";
 import {
   IComponentOptions,
   IEventOptions,
+  ISlashCommandOptions
 } from "../../interactions/decorators/methods";
 import { IModuleOptions } from "@/packages/modules/decorators";
+import { CommandType } from "../types";
 
 /**
  * Interface to represent the decorator metadata for methods
@@ -91,6 +93,12 @@ export class ModuleDiscordCollector {
       Promise.allSettled([
         this.addHandler(module, method, MetadataKeys.EVENT, moduleMetadata),
         this.addHandler(module, method, MetadataKeys.COMPONENT, moduleMetadata),
+        this.addHandler(
+          module,
+          method,
+          MetadataKeys.SLASH_COMMAND,
+          moduleMetadata
+        ),
       ])
     );
 
@@ -131,6 +139,13 @@ export class ModuleDiscordCollector {
       this.client.components.set(handlerId, {
         executor: boundMethod,
         options: metadata as IComponentOptions,
+        module: moduleMetadata,
+      });
+    } else if (metadataKey === MetadataKeys.SLASH_COMMAND) {
+      const handlerId = `${metadata.builder!.name}`;
+      this.client.slashCommands.set(handlerId, {
+        executor: boundMethod,
+        options: metadata as ISlashCommandOptions,
         module: moduleMetadata,
       });
     }

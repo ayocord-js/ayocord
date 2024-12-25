@@ -1,6 +1,7 @@
 import {
   AnySelectMenuInteraction,
   ButtonInteraction,
+  CommandInteraction,
   Events,
   Interaction,
   ModalSubmitInteraction,
@@ -8,6 +9,7 @@ import {
 import { DiscordClient } from "../client";
 import { CustomIdParser } from "@/packages/utils/parsers/custom-id.parser";
 import { IHandler } from "../types/handler.interface";
+import { ISlashCommandOptions } from "@/packages/interactions";
 
 export class InteractionHandler implements IHandler {
   client: DiscordClient;
@@ -20,6 +22,9 @@ export class InteractionHandler implements IHandler {
     });
   }
   protected async handle(interaction: Interaction) {
+    if (interaction.isCommand()) {
+      return await this.handleCommands(interaction);
+    }
     if (
       interaction.isButton() ||
       interaction.isAnySelectMenu() ||
@@ -29,7 +34,17 @@ export class InteractionHandler implements IHandler {
     }
   }
 
-  protected async handleCommands() {}
+  protected async handleCommands(interaction: CommandInteraction) {
+    const commandFromCache = this.client.slashCommands.get(
+      interaction.commandName
+    );
+
+    if (commandFromCache) {
+      const { isDevOnly } = commandFromCache as unknown as ISlashCommandOptions;
+      if (isDevOnly && !this.client.devs?.includes(interaction.user.id)) return;
+      await commandFromCache.executor(interaction);
+    }
+  }
   protected async handleComponents(
     interaction:
       | ButtonInteraction

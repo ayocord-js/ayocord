@@ -1,29 +1,45 @@
 import { IDiscordClientOptions } from "../types/client.types";
 import { DiscordClient } from "../client";
 import { ModuleDiscordCollector } from "../collectors/module.collector";
-import { EventHandler, handlers, InteractionHandler } from "../handlers";
-import { Events } from "discord.js";
+import { handlers } from "../handlers";
 
+/**
+ * A factory for creating and configuring a Discord client.
+ */
 export class DiscordFactory {
   /**
-   * 1) creating instance
-   * 2) collect modules
-   * 3) add handlers
-   * 4) return client instance
+   * Creates a Discord client instance, collects modules, connects handlers, and synchronizes commands.
+   * 
+   * @param options - The options for initializing the Discord client.
+   * @returns A fully configured instance of `DiscordClient`.
+   * 
+   * @example
+   * const client = await DiscordFactory.create({
+   *   token: "your-bot-token",
+   *   synchronize: { global: true, guild: true },
+   * });
    */
   public static async create(options: IDiscordClientOptions) {
+    // Create a new instance of DiscordClient
     const client = new DiscordClient({ ...options });
+
+    // Create an instance of the module collector
     const collector = new ModuleDiscordCollector(client);
-    /**
-     * Collecting entities (e.g. slash_commands or events)
-     */
-    await collector.collect();
-    /**
-     * Connecting handlers
-     */
-    handlers.map(handler => {
-      new handler(client).connect()
-    })
+
+    try {
+      // Collect modules such as slash commands or event listeners
+      await collector.collect();
+      client.logger?.info("Modules have been successfully collected.");
+    } catch (e) {
+      client.logger?.error(`Error while collecting modules: ${e}`);
+    }
+
+    // Connect handlers (e.g., events, interactions)
+    handlers.forEach((Handler) => {
+      new Handler(client).connect();
+      client.logger?.success(`Handler ${Handler.name} connected successfully.`);
+    });
+
     return client;
   }
 }

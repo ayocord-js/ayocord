@@ -10,7 +10,6 @@ import {
   IAutoCompleteOptions,
   IComponentOptions,
   IEventOptions,
-
   ISlashCommandOptions,
   ITextCommandOptions,
 } from "../../interactions/decorators/methods";
@@ -38,8 +37,7 @@ export enum CommandType {
 }
 
 export interface ICommandEntity extends IDiscordEntity {
-  type: CommandType;
-  options: ISlashCommandOptions | ITextCommandOptions;
+  options: ISlashCommandOptions;
 }
 
 export interface IAutoCompleteEntity extends IDiscordEntity {
@@ -56,10 +54,25 @@ export type EventCollection = Collection<string, IEventEntity>;
 export type AutoCompleteCollection = Collection<string, IAutoCompleteEntity>;
 export type ComponentCollection = Collection<string, IComponentEntity>;
 
+export interface ISynchronizeOptions {
+  /**
+   * Using for synchronize global commands from SlashCommand decorator
+   */
+  global?: boolean;
+  /**
+   * Using for synchronize guild commands from SlashCommand decorator options
+   */
+  guild?: boolean;
+}
+
 export interface IDiscordClientOptions extends ClientOptions {
   intents: BitFieldResolvable<GatewayIntentsString, number>;
   /**
-   * How you call your sheep then he swim
+   * Discord Bot token
+   */
+  token: string;
+  /**
+   * How you call your ship then he swim
    */
   applicationName?: string;
   /**
@@ -74,11 +87,19 @@ export interface IDiscordClientOptions extends ClientOptions {
   /**
    * Would you like to use custom logger or our ayologger - your choice
    */
-  logger?: typeof Logger;
+  logger?: InstanceType<typeof Logger> | Logger; // Инстанс или объект наследника
   /**
    * Used for text commands
    */
   prefix?: string;
+  /**
+   * By default synchronize is enabled
+   * 
+   * Using for synchronize global or guild commands
+   *
+   * If you want to use your custom command register handler. Use client.commands collection for getting commands
+   */
+  synchronize?: ISynchronizeOptions;
   /**
    * Collection of modules
    */
@@ -86,7 +107,7 @@ export interface IDiscordClientOptions extends ClientOptions {
   /**
    * Collection of Commands from modules
    */
-  commands?: CommandCollection;
+  slashCommands?: CommandCollection;
   /**
    * Collection of events
    */
