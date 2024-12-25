@@ -28,13 +28,13 @@ My library solve this problem
 ### Launcher
 
 - DiscordClient ✅
-- DiscordCollector ❌
+- DiscordCollector ✅
 - DiscordFactory ✅
 
 ### Handlers
 
 - EventHandler ✅
-- InteractionHandler ❌
+- InteractionHandler ✅
 - TextCommandHandler ❌
 
 ### Interaction Decorators
