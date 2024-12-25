@@ -42,7 +42,7 @@ My library solve this problem
 > Methods
 
 - Event ✅
-- SlashCommand ❌
+- SlashCommand ✅
 - TextCommand ❌
 - Component ✅
 - AutoComplete ❌
