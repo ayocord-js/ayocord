@@ -1,5 +1,8 @@
+import "reflect-metadata";
 export * from "ayologger";
-export * from "@/client";
-export * from "@/jobs";
-export * from "@/guards";
-export * from "@/utils";
+export * from "@/packages/client";
+export * from "@/packages/jobs";
+export * from "@/packages/guards";
+export * from "@/packages/utils";
+export * from '@/packages/interactions'
+export * from '@/packages/modules'

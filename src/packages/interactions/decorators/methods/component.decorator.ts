@@ -1,12 +1,10 @@
-// TODO: implement it
-
 import {
   AnySelectMenuInteraction,
   ButtonInteraction,
   ModalSubmitInteraction,
 } from "discord.js";
-import { MetadataKeys } from "../types/metadata-keys.enum";
-import { CustomIdParser } from "@/utils/parsers/custom-id.parser";
+import { MetadataKeys } from "../../../../shared/types/metadata-keys.enum";
+import { CustomIdParser } from "@/packages/utils/parsers/custom-id.parser";
 
 export interface IComponentOptions {
   customId: string;

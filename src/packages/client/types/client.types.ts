@@ -6,24 +6,26 @@ import {
   Snowflake,
 } from "discord.js";
 import { Logger } from "ayologger";
-import { AbstractModule } from "@/abstractions/module.abstract";
 import {
   IAutoCompleteOptions,
+  IComponentOptions,
   IEventOptions,
+
   ISlashCommandOptions,
   ITextCommandOptions,
-} from "../decorators";
+} from "../../interactions/decorators/methods";
+import { IModuleOptions } from "@/packages/modules/decorators";
 
 export interface IModule {
   isEnabled: boolean;
-  module: AbstractModule;
+  module: IModuleOptions;
 }
 
 export type DiscordExecutor = (...args: unknown[]) => Promise<any>;
 
 export interface IDiscordEntity {
-  module: AbstractModule;
-  executor: DiscordExecutor;
+  module: IModuleOptions;
+  executor: any;
 }
 
 export interface IEventEntity extends IDiscordEntity {
@@ -44,10 +46,15 @@ export interface IAutoCompleteEntity extends IDiscordEntity {
   options: IAutoCompleteOptions;
 }
 
+export interface IComponentEntity extends IDiscordEntity {
+  options: IComponentOptions;
+}
+
 export type ModuleCollection = Collection<string, IModule>;
 export type CommandCollection = Collection<string, ICommandEntity>;
 export type EventCollection = Collection<string, IEventEntity>;
 export type AutoCompleteCollection = Collection<string, IAutoCompleteEntity>;
+export type ComponentCollection = Collection<string, IComponentEntity>;
 
 export interface IDiscordClientOptions extends ClientOptions {
   intents: BitFieldResolvable<GatewayIntentsString, number>;
@@ -72,7 +79,7 @@ export interface IDiscordClientOptions extends ClientOptions {
       /**
        * The class from which can be extend your module
        */
-      parentClass?: typeof AbstractModule;
+      parentClass?: IModule;
     };
     /**
      * Path to your module dir

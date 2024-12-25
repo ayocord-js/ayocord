@@ -1,5 +1,5 @@
 import { Events, Message } from "discord.js";
-import { MetadataKeys } from "../types/metadata-keys.enum";
+import { MetadataKeys } from "../../../../shared/types/metadata-keys.enum";
 
 export interface IEventOptions {
   /**
