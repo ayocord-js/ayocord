@@ -41,10 +41,13 @@ export class InteractionHandler extends BaseHandler implements IHandler {
     );
 
     if (commandFromCache) {
-      const { options } =
+      const { options, module } =
         commandFromCache as unknown as ISlashCommandEntity;
       if (!this.getModuleFromCache(commandFromCache)) return;
-      if (options.isDevOnly && !this.client.devs?.includes(interaction.user.id))
+      if (
+        (module.isDev || options.isDevOnly) &&
+        !this.client.devs?.includes(interaction.user.id)
+      )
         return;
       await commandFromCache.executor(interaction);
     }
@@ -62,7 +65,11 @@ export class InteractionHandler extends BaseHandler implements IHandler {
       const { options, module } = componentFromCache;
       const { isDevOnly, isAuthorOnly, ttl } = options;
       if (!this.getModuleFromCache(componentFromCache)) return;
-      if (isDevOnly && !this.client.devs?.includes(interaction.user.id)) return;
+      if (
+        (module.isDev || isDevOnly) &&
+        !this.client.devs?.includes(interaction.user.id)
+      )
+        return;
       if (
         isAuthorOnly &&
         interaction.user.id !== interaction.message?.author.id
