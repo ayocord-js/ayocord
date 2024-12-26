@@ -5,7 +5,8 @@ import { MetadataKeys } from "../../../shared/types/metadata-keys.enum";
 import {
   IComponentOptions,
   IEventOptions,
-  ISlashCommandOptions
+  ISlashCommandOptions,
+  ITextCommandOptions,
 } from "../../interactions/decorators/methods";
 import { IModuleOptions } from "@/packages/modules/decorators";
 import { CommandType } from "../types";
@@ -89,14 +90,25 @@ export class ModuleDiscordCollector {
     const methods = this.getModuleMethods(module);
 
     // Process methods with associated event/component metadata
+
     const promises = methods.map((method) =>
       Promise.allSettled([
+        this.client.modules.set(moduleMetadata.name, {
+          module: moduleMetadata,
+          isEnabled: true,
+        }),
         this.addHandler(module, method, MetadataKeys.EVENT, moduleMetadata),
         this.addHandler(module, method, MetadataKeys.COMPONENT, moduleMetadata),
         this.addHandler(
           module,
           method,
           MetadataKeys.SLASH_COMMAND,
+          moduleMetadata
+        ),
+        this.addHandler(
+          module,
+          method,
+          MetadataKeys.TEXT_COMMAND,
           moduleMetadata
         ),
       ])
@@ -126,7 +138,13 @@ export class ModuleDiscordCollector {
     if (!metadata) return;
 
     const boundMethod = (method.method as any).bind(module);
-
+    if (metadataKey === MetadataKeys.MODULE) {
+      const handlerId = `${moduleMetadata.name}`;
+      this.client.modules.set(handlerId, {
+        module: moduleMetadata,
+        isEnabled: true,
+      });
+    }
     if (metadataKey === MetadataKeys.EVENT) {
       const handlerId = `${moduleMetadata.name}_${metadata.name}`;
       this.client.events.set(handlerId, {
@@ -146,6 +164,13 @@ export class ModuleDiscordCollector {
       this.client.slashCommands.set(handlerId, {
         executor: boundMethod,
         options: metadata as ISlashCommandOptions,
+        module: moduleMetadata,
+      });
+    } else if (metadataKey === MetadataKeys.TEXT_COMMAND) {
+      const handlerId = `${metadata.name}`;
+      this.client.textCommands.set(handlerId, {
+        executor: boundMethod,
+        options: metadata as ITextCommandOptions,
         module: moduleMetadata,
       });
     }

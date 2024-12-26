@@ -29,7 +29,7 @@ export class DiscordFactory {
     try {
       // Collect modules such as slash commands or event listeners
       await collector.collect();
-      client.logger?.info("Modules have been successfully collected.");
+      client.logger?.info("Modules have been successfully collected");
     } catch (e) {
       client.logger?.error(`Error while collecting modules: ${e}`);
     }
@@ -37,7 +37,7 @@ export class DiscordFactory {
     // Connect handlers (e.g., events, interactions)
     handlers.forEach((Handler) => {
       new Handler(client).connect();
-      client.logger?.success(`Handler ${Handler.name} connected successfully.`);
+      client.logger?.success(`Handler ${Handler.name} connected successfully`);
     });
 
     return client;

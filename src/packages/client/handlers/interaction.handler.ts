@@ -10,11 +10,12 @@ import { DiscordClient } from "../client";
 import { CustomIdParser } from "@/packages/utils/parsers/custom-id.parser";
 import { IHandler } from "../types/handler.interface";
 import { ISlashCommandOptions } from "@/packages/interactions";
+import { ISlashCommandEntity } from "../types";
+import { BaseHandler } from "./abstract.handler";
 
-export class InteractionHandler implements IHandler {
-  client: DiscordClient;
+export class InteractionHandler extends BaseHandler implements IHandler {
   constructor(client: DiscordClient) {
-    this.client = client;
+    super(client);
   }
   connect(): void {
     this.client.on(Events.InteractionCreate, (interaction: Interaction) => {
@@ -40,8 +41,11 @@ export class InteractionHandler implements IHandler {
     );
 
     if (commandFromCache) {
-      const { isDevOnly } = commandFromCache as unknown as ISlashCommandOptions;
-      if (isDevOnly && !this.client.devs?.includes(interaction.user.id)) return;
+      const { options } =
+        commandFromCache as unknown as ISlashCommandEntity;
+      if (!this.getModuleFromCache(commandFromCache)) return;
+      if (options.isDevOnly && !this.client.devs?.includes(interaction.user.id))
+        return;
       await commandFromCache.executor(interaction);
     }
   }
@@ -55,7 +59,9 @@ export class InteractionHandler implements IHandler {
 
     const componentFromCache = this.client.components.get(args[0]);
     if (componentFromCache) {
-      const { isDevOnly, isAuthorOnly, ttl } = componentFromCache?.options;
+      const { options, module } = componentFromCache;
+      const { isDevOnly, isAuthorOnly, ttl } = options;
+      if (!this.getModuleFromCache(componentFromCache)) return;
       if (isDevOnly && !this.client.devs?.includes(interaction.user.id)) return;
       if (
         isAuthorOnly &&

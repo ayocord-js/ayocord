@@ -1,8 +1,6 @@
 import {
   Client,
   Collection,
-  Guild,
-  OAuth2Guild,
   REST,
   Routes,
   SlashCommandBuilder,
@@ -17,8 +15,8 @@ import {
   IDiscordClientOptions,
   ISynchronizeOptions,
   ModuleCollection,
+  TextCommandCollection,
 } from "./types/client.types";
-import { ISlashCommandOptions } from "../interactions";
 
 /**
  * Custom Discord Client class that extends the base Client functionality.
@@ -30,6 +28,7 @@ export class DiscordClient extends Client {
   public events: EventCollection;
   public components: ComponentCollection;
   public autoComplete: AutoCompleteCollection;
+  public textCommands: TextCommandCollection;
   public applicationName?: string;
   public version?: string;
   public devs?: Snowflake[];
@@ -50,6 +49,7 @@ export class DiscordClient extends Client {
     this.slashCommands = new Collection();
     this.autoComplete = new Collection();
     this.components = new Collection();
+    this.textCommands = new Collection();
 
     this.applicationName = options.applicationName;
     this.version = options.version;

@@ -36,7 +36,7 @@ export enum CommandType {
   TEXT = 1,
 }
 
-export interface ICommandEntity extends IDiscordEntity {
+export interface ISlashCommandEntity extends IDiscordEntity {
   options: ISlashCommandOptions;
 }
 
@@ -48,11 +48,16 @@ export interface IComponentEntity extends IDiscordEntity {
   options: IComponentOptions;
 }
 
+export interface ITextCommandEntity extends IDiscordEntity {
+  options: ITextCommandOptions;
+}
+
 export type ModuleCollection = Collection<string, IModule>;
-export type CommandCollection = Collection<string, ICommandEntity>;
+export type CommandCollection = Collection<string, ISlashCommandEntity>;
 export type EventCollection = Collection<string, IEventEntity>;
 export type AutoCompleteCollection = Collection<string, IAutoCompleteEntity>;
 export type ComponentCollection = Collection<string, IComponentEntity>;
+export type TextCommandCollection = Collection<string, ITextCommandEntity>;
 
 export interface ISynchronizeOptions {
   /**
@@ -94,7 +99,7 @@ export interface IDiscordClientOptions extends ClientOptions {
   prefix?: string;
   /**
    * By default synchronize is enabled
-   * 
+   *
    * Using for synchronize global or guild commands
    *
    * If you want to use your custom command register handler. Use client.commands collection for getting commands
@@ -105,9 +110,13 @@ export interface IDiscordClientOptions extends ClientOptions {
    */
   modules?: ModuleCollection;
   /**
-   * Collection of Commands from modules
+   * Collection of SlashCommands from modules
    */
   slashCommands?: CommandCollection;
+  /**
+   * Collection of TextCommands
+   */
+  textCommands?: TextCommandCollection;
   /**
    * Collection of events
    */
@@ -117,3 +126,10 @@ export interface IDiscordClientOptions extends ClientOptions {
    */
   autoComplete?: AutoCompleteCollection;
 }
+
+export type TEntity =
+  | IAutoCompleteEntity
+  | IEventEntity
+  | IComponentEntity
+  | ITextCommandEntity
+  | ISlashCommandEntity;
