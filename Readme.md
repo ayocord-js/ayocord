@@ -60,6 +60,7 @@ My library solve this problem
 > Use this decorators for interact with discord API
 
 - Methods
+
   - [x] Event
   - [x] Component
   - [x] SlashCommand
@@ -92,6 +93,16 @@ My library solve this problem
   - [x] Guard
 - Interfaces
   - [x] CanUse
+
+### Job
+
+> Use this decorator to repeat action every duration
+
+- Decorators
+  - [ ] Job
+- Cache
+  - [ ] Set jobs
+  - [ ] Cancel jobs
 
 ## Examples
 
