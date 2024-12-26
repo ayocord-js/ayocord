@@ -17,7 +17,7 @@ export class TextCommandHandler extends BaseHandler implements IHandler {
     /**
      * Split message content to arguments
      */
-    const args = command.split(" ");
+    const messageArgs = command.split(" ");
     /**
      * Check prefix
      */
@@ -34,7 +34,7 @@ export class TextCommandHandler extends BaseHandler implements IHandler {
       );
       return;
     }
-    const commandName = args[0];
+    const commandName = messageArgs[0];
     if (!commandName.startsWith(prefix)) return;
     const commandFromCache = this.client.textCommands.get(
       commandName.replace(prefix, "")
@@ -43,7 +43,7 @@ export class TextCommandHandler extends BaseHandler implements IHandler {
       this.client.logger?.warn(`Command with name ${commandName} not found`);
       return;
     }
-    const { module } = commandFromCache;
+    const { module, options } = commandFromCache;
     /**
      * Check module enabling
      */
@@ -53,5 +53,10 @@ export class TextCommandHandler extends BaseHandler implements IHandler {
       );
       return;
     }
+    const { args } = options;
+    const parsedArgs = args?.map((arg) => {
+      const { types, name } = arg;
+      
+    });
   }
 }

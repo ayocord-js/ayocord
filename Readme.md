@@ -17,55 +17,76 @@ You can see a lot of commands/components/events file
 My library solve this problem
 
 ## Features
+* **Decorator Based Syntax** - use TypeScript decorators and class based way to write your discord bot
+  * Interactions - use decorators to interact with discord API in one class
+    * Event
+    * Slash commands
+    * Text commands
+    * Autocomplete
+  * **Views** - using for create your rows with callback! 
+    * Button
+    * Select (Role, Channel, User, String)
+    * Modal
+  * **Guards** - check permissions before user use your command
+    * Guard
+  * **Jobs** - you need to check use subcribes every 20 seconds? This decorators can solve your problem
+    * Job
+* **Utils** - some useful utils for your discord bot (not rich and not poor)
+  * Snowflake parser
+  * Discohook parser
+  * CustomId parser
 
-- TypeSafe
-- Discord Entity decorators (class and method ways)
-- Modules
-- Views
 
 ## ToDo
 
 ### Launcher
+> Internal feature
 
-- DiscordClient ✅
-- DiscordCollector ✅
-- DiscordFactory ✅
+* DiscordClient []
+* DiscordCollector []
+* DiscordFactory []
 
 ### Handlers
+> Internal feature
 
-- EventHandler ✅
-- InteractionHandler ✅
-- TextCommandHandler ❌
+* EventHandler [x]
+* InteractionHandler [x]
+* TextCommandHandler []
 
 ### Interaction Decorators
+> Use this decorators for interact with discord API
 
-> Methods
+* Methods
+  * Event [x] 
+  * SlashCommand [x] 
+  * TextCommand [] 
+  * Component [x] 
+  * AutoComplete [] 
 
-- Event ✅
-- SlashCommand ✅
-- TextCommand ❌
-- Component ✅
-- AutoComplete ❌
-
-> Class
-
-- Event ❌
-- SlashCommand ❌
-- TextCommand ❌
-- Component ❌
-- AutoComplete ❌
+* Class
+  * Event []
+  * SlashCommand []
+  * TextCommand []
+  * Component []
+  * AutoComplete
 
 ### Views
+> Use this decorators to creating action rows with callback
 
-- Button ❌
-- Modal ❌
-- StringSelect ❌
-- RoleSelect ❌
-- ChannelSelect ❌
+* Views []  
+  * Button []
+  * Modal []
+  * StringSelect []
+  * RoleSelect []
+  * ChannelSelect []
 
 ### Guards
+> Use this decorator for checking permissions or another stuff before user interact with command or something else
 
-- Guard ✅
+* Decorators
+  * Guard [x]
+* Interfaces
+ * CanUse [x]
 
 ## Examples
 

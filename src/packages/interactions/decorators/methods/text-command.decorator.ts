@@ -35,12 +35,9 @@ export enum ITextCommandArgumentType {
  */
 export interface ITextCommandArgument {
   /**
-   * Optional name for the argument.
-   *
-   * This property is for developer convenience and documentation purposes only.
-   * It does not affect the functionality of the argument in any way.
+   * Using for argument object
    */
-  name?: string;
+  name: string;
 
   /**
    * Specifies the possible types for this argument.
