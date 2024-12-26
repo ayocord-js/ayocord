@@ -57,8 +57,10 @@ My library solve this problem
 
 ### Interaction Decorators
 
-> Use this decorators for interact with discord API
+> Use this decorators for interact with discord API <br>
+> There are two ways to use this decorators
 
+**Recommended**
 - Methods
 
   - [x] Event
@@ -67,11 +69,12 @@ My library solve this problem
   - [ ] TextCommand
   - [ ] AutoComplete
 
+**Old school**
 - Class
-  - [x] Event
-  - [x] SlashCommand
-  - [x] TextCommand
-  - [x] Component
+  - [ ] Event
+  - [ ] SlashCommand
+  - [ ] TextCommand
+  - [ ] Component
   - [ ] AutoComplete
 
 ### Views
