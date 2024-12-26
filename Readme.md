@@ -43,9 +43,9 @@ My library solve this problem
 
 > Internal feature
 
-- [] DiscordClient
-- [] DiscordCollector
-- [] DiscordFactory
+- [x] DiscordClient
+- [x] DiscordCollector
+- [x] DiscordFactory
 
 ### Handlers
 
@@ -53,7 +53,7 @@ My library solve this problem
 
 - [x] EventHandler
 - [x] InteractionHandler
-- [] TextCommandHandler
+- [ ] TextCommandHandler
 
 ### Interaction Decorators
 
@@ -63,26 +63,26 @@ My library solve this problem
   - [x] Event
   - [x] Component
   - [x] SlashCommand
-  - [] TextCommand
-  - [] AutoComplete
+  - [ ] TextCommand
+  - [ ] AutoComplete
 
 - Class
   - [x] Event
   - [x] SlashCommand
   - [x] TextCommand
   - [x] Component
-  - [] AutoComplete
+  - [ ] AutoComplete
 
 ### Views
 
 > Use this decorators to creating action rows with callback
 
-- [] Views
-- [] Button
-- [] Modal
-- [] StringSelect
-- [] RoleSelect
-- [] ChannelSelect
+- [ ] Views
+- [ ] Button
+- [ ] Modal
+- [ ] StringSelect
+- [ ] RoleSelect
+- [ ] ChannelSelect
 
 ### Guards
 
