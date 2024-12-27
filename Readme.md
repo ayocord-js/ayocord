@@ -1,4 +1,4 @@
-<img src="https://imgur.com/6hzTmgU.png">
+<img src="https://imgur.com/6hzTmgU.png" style="display: block; margin: 0 auto;">
 
 # Introduction
 
