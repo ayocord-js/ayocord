@@ -57,7 +57,7 @@ My library solve this problem
 
 - [x] EventHandler
 - [x] InteractionHandler
-- [ ] TextCommandHandler
+- [x] TextCommandHandler
 
 ### Interaction Decorators
 
@@ -72,16 +72,8 @@ My library solve this problem
   - [x] Component
   - [x] SlashCommand
   - [x] TextCommand
-  - [ ] AutoComplete
-
-**Old school**
-
-- Class
-  - [x] Event
-  - [x] SlashCommand
-  - [x] TextCommand
-  - [x] Component
-  - [ ] AutoComplete
+  - [x] AutoComplete
+  - [x] SubCommand
 
 ### Views
 
@@ -112,6 +104,18 @@ My library solve this problem
 - Cache
   - [ ] Set jobs
   - [ ] Cancel jobs
+
+### Modules
+
+- Decorators
+  - [x] Module
+- Lifecycle
+  - [ ] onLoad
+  - [ ] onUnload
+- Module loader (Client functions)
+  - [ ] unloadModule
+  - [ ] loadModule
+  
 
 ## Examples
 
