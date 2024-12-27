@@ -18,6 +18,7 @@ import {
   SubCommandCollection,
   TextCommandCollection,
 } from "./types/client.types";
+import { DiscordModule } from "../modules";
 
 /**
  * Custom Discord Client class that extends the base Client functionality.
@@ -61,6 +62,26 @@ export class DiscordClient extends Client {
     this.prefix = options.prefix;
     this.synchronize = options.synchronize ?? { global: true, guild: true };
     this.token = options.token;
+  }
+
+  async moduleEnable(name: string) {
+    const module = this.modules.get(name);
+    if (!module) return;
+    this.modules.set(name, { ...module, isEnabled: false });
+    try {
+      //@ts-ignore
+      await (module.instance as DiscordModule)?.onLoad();
+    } catch {}
+  }
+
+  async moduleUnEnable(name: string) {
+    const module = this.modules.get(name);
+    if (!module) return;
+    this.modules.set(name, { ...module, isEnabled: false });
+    try {
+      //@ts-ignore
+      await (module.instance as DiscordModule)?.onUnload();
+    } catch {}
   }
 
   /**

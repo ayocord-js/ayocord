@@ -18,6 +18,7 @@ import { ISubCommandOptions } from "@/packages/interactions/decorators/sub-comma
 
 export interface IModule {
   isEnabled: boolean;
+  instance: Function;
   module: IModuleOptions;
 }
 
@@ -54,7 +55,7 @@ export interface ITextCommandEntity extends IDiscordEntity {
 }
 
 export interface ISubCommandEntity extends IDiscordEntity {
-  options: ISubCommandOptions
+  options: ISubCommandOptions;
 }
 
 export type ModuleCollection = Collection<string, IModule>;

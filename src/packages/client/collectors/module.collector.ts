@@ -97,6 +97,7 @@ export class ModuleDiscordCollector {
       Promise.allSettled([
         this.client.modules.set(moduleMetadata.name, {
           module: moduleMetadata,
+          instance: new module(),
           isEnabled: true,
         }),
         Object.values(MetadataKeys).map((value) => {
@@ -133,6 +134,7 @@ export class ModuleDiscordCollector {
       const handlerId = `${moduleMetadata.name}`;
       this.client.modules.set(handlerId, {
         module: moduleMetadata,
+        instance: new module(),
         isEnabled: true,
       });
     }
