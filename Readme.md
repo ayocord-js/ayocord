@@ -1,4 +1,6 @@
-# AyoCord
+<img src="https://imgur.com/6hzTmgU">
+
+# Introduction
 
 Wow! This library is my new lvl of coding
 Okey, What about she? This library is a wrapper under discord.js
@@ -61,6 +63,7 @@ My library solve this problem
 > There are two ways to use this decorators
 
 **Recommended**
+
 - Methods
 
   - [x] Event
@@ -70,6 +73,7 @@ My library solve this problem
   - [ ] AutoComplete
 
 **Old school**
+
 - Class
   - [ ] Event
   - [ ] SlashCommand
