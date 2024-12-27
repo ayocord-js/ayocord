@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://i.imgur.com/6hzTmgU.png">
+  <img src="https://imgur.com/yuPpjpa.png">
 </div>
 
 # Introduction
@@ -71,16 +71,16 @@ My library solve this problem
   - [x] Event
   - [x] Component
   - [x] SlashCommand
-  - [ ] TextCommand
+  - [x] TextCommand
   - [ ] AutoComplete
 
 **Old school**
 
 - Class
-  - [ ] Event
-  - [ ] SlashCommand
-  - [ ] TextCommand
-  - [ ] Component
+  - [x] Event
+  - [x] SlashCommand
+  - [x] TextCommand
+  - [x] Component
   - [ ] AutoComplete
 
 ### Views
