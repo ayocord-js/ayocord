@@ -43,7 +43,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
   protected async handle(interaction: Interaction) {
     if (interaction.isCommand()) {
       this.handleCommands(interaction);
-      // this.handleSubCommand(interaction);
+      this.handleSubCommand(interaction);
     }
     if (interaction.isAutocomplete()) {
       await this.handleAutoCompolete(interaction);
