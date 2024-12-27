@@ -1,5 +1,6 @@
 import {
   AnySelectMenuInteraction,
+  ApplicationCommandOptionType,
   AutocompleteInteraction,
   ButtonInteraction,
   CommandInteraction,
@@ -41,10 +42,8 @@ export class InteractionHandler extends BaseHandler implements IHandler {
    */
   protected async handle(interaction: Interaction) {
     if (interaction.isCommand()) {
-      await Promise.all([
-        this.handleCommands(interaction),
-        this.handleSubCommand(interaction),
-      ]);
+      this.handleCommands(interaction);
+      // this.handleSubCommand(interaction);
     }
     if (interaction.isAutocomplete()) {
       await this.handleAutoCompolete(interaction);
@@ -66,7 +65,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
     const commandFromCache = this.client.slashCommands.get(
       interaction.commandName
     );
-
+    console.log(commandFromCache);
     if (commandFromCache) {
       const { options, module } =
         commandFromCache as unknown as ISlashCommandEntity;
@@ -91,21 +90,43 @@ export class InteractionHandler extends BaseHandler implements IHandler {
   protected async handleSubCommand(interaction: CommandInteraction) {
     try {
       const commandName = interaction.commandName;
-      const subCommandGroupName =
-        (interaction.options as any)?.getSubcommandGroup() || "";
-      const subCommandName =
-        (interaction.options as any)?.getSubcommand() || "";
+
+      // Проверяем, есть ли вложенные сабкоманды
+      const hasSubCommandGroup = interaction.options.data.some(
+        (option) => option.type === ApplicationCommandOptionType.SubcommandGroup
+      );
+      const hasSubCommand = interaction.options.data.some(
+        (option) => option.type === ApplicationCommandOptionType.Subcommand
+      );
+
+      const subCommandGroupName = hasSubCommandGroup
+        ? (interaction.options as any)?.getSubcommandGroup()
+        : "";
+      const subCommandName = hasSubCommand
+        ? (interaction.options as any)?.getSubcommand()
+        : "";
+
       const subCommandFromCache = this.client.subCommands.get(
         `${commandName}_${
           subCommandGroupName ? "_" + subCommandGroupName : ""
-        }_${subCommandName}` // Format to access the correct subcommand
+        }_${subCommandName}`
       );
+
+      if (!subCommandFromCache) {
+        this.client.logger?.warn(
+          `Subcommand not found: ${commandName}_${subCommandGroupName}_${subCommandName}`
+        );
+        return;
+      }
+
       try {
-        await subCommandFromCache?.executor(interaction);
+        await subCommandFromCache.executor(interaction);
       } catch (e) {
         this.client.logger?.error(e);
       }
-    } catch {}
+    } catch (e) {
+      this.client.logger?.error(e);
+    }
   }
 
   /**
@@ -152,19 +173,41 @@ export class InteractionHandler extends BaseHandler implements IHandler {
   protected async handleAutoCompolete(interaction: AutocompleteInteraction) {
     try {
       const commandName = interaction.commandName;
-      const subCommandGroupName =
-        (interaction.options as any).getSubcommandGroup() || "";
-      const subCommandName = (interaction.options as any).getSubcommand() || "";
+
+      const hasSubCommandGroup = interaction.options.data.some(
+        (option) => option.type === ApplicationCommandOptionType.SubcommandGroup
+      );
+      const hasSubCommand = interaction.options.data.some(
+        (option) => option.type === ApplicationCommandOptionType.Subcommand
+      );
+
+      const subCommandGroupName = hasSubCommandGroup
+        ? (interaction.options as any).getSubcommandGroup()
+        : "";
+      const subCommandName = hasSubCommand
+        ? (interaction.options as any).getSubcommand()
+        : "";
+
       const autoCompleteFromCache = this.client.autoComplete.get(
         `${commandName}_${
           subCommandGroupName ? "_" + subCommandGroupName : ""
-        }_${subCommandName}` // Format to access the correct autocomplete handler
+        }_${subCommandName}`
       );
+
+      if (!autoCompleteFromCache) {
+        this.client.logger?.warn(
+          `Autocomplete handler not found: ${commandName}_${subCommandGroupName}_${subCommandName}`
+        );
+        return;
+      }
+
       try {
-        await autoCompleteFromCache?.executor(interaction);
+        await autoCompleteFromCache.executor(interaction);
       } catch (e) {
         this.client.logger?.error(e);
       }
-    } catch {}
+    } catch (e) {
+      this.client.logger?.error(e);
+    }
   }
 }

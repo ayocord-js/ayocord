@@ -73,9 +73,11 @@ export class DiscordClient extends Client {
       await rest.put(Routes.applicationCommands(this.user!.id), {
         body: commands,
       });
-      this.logger?.success(
-        `Successfully registered ${commands.length} global command(s).`
-      );
+      if (commands.length >= 1) {
+        this.logger?.success(
+          `Successfully registered ${commands.length} global command(s).`
+        );
+      }
     } catch (e) {
       this.logger?.error(`Failed to register global commands: ${e}`);
     }
@@ -95,9 +97,11 @@ export class DiscordClient extends Client {
       await rest.put(Routes.applicationGuildCommands(this.user!.id, guildId), {
         body: commands,
       });
-      this.logger?.success(
-        `Successfully registered ${commands.length} command(s) for guild with ID: ${guildId}.`
-      );
+      if (commands.length >= 1) {
+        this.logger?.success(
+          `Successfully registered ${commands.length} command(s) for guild with ID: ${guildId}.`
+        );
+      }
     } catch (e) {
       this.logger?.error(
         `Failed to register guild commands for ${guildId}: ${e}`
@@ -212,5 +216,76 @@ export class DiscordClient extends Client {
 
     // Wait for all registration promises to complete
     await Promise.all(promises);
+  }
+
+  /**
+   * Unregisters specific guild slash commands by comparing the provided commands with the existing ones.
+   * @param guildId - The ID of the guild where the commands will be unregistered.
+   * @param commands - An array of SlashCommandBuilder instances to unregister.
+   * @param token - The bot token for authentication.
+   */
+  async unRegisterGuildCommands(
+    guildId: Snowflake,
+    commands: SlashCommandBuilder[]
+  ) {
+    const rest = new REST({ version: "10" }).setToken(this.token);
+
+    try {
+      // Fetch existing commands from the guild
+      const existingCommands: any[] = (await rest.get(
+        Routes.applicationGuildCommands(this.user!.id, guildId)
+      )) as any[];
+
+      // Extract command names from the provided builders
+      const commandNamesToRemove = commands.map((command) => command.name);
+
+      // Filter existing commands to keep only those not in the removal list
+      const updatedCommands = existingCommands.filter(
+        (cmd) => !commandNamesToRemove.includes(cmd.name)
+      );
+
+      // Update the guild's commands with the filtered list
+      await rest.put(Routes.applicationGuildCommands(this.user!.id, guildId), {
+        body: updatedCommands,
+      });
+
+      this.logger?.success(
+        `Successfully unregistered ${commandNamesToRemove.length} command(s) for guild with ID: ${guildId}.`
+      );
+    } catch (e) {
+      this.logger?.error(
+        `Failed to unregister guild commands for ${guildId}: ${e}`
+      );
+    }
+  }
+
+  async unRegisterGlobalCommands(commands: SlashCommandBuilder[]) {
+    const rest = new REST({ version: "10" }).setToken(this.token);
+
+    try {
+      // Fetch existing commands from the guild
+      const existingCommands: any[] = (await rest.get(
+        Routes.applicationCommands(this.user!.id)
+      )) as any[];
+
+      // Extract command names from the provided builders
+      const commandNamesToRemove = commands.map((command) => command.name);
+
+      // Filter existing commands to keep only those not in the removal list
+      const updatedCommands = existingCommands.filter(
+        (cmd) => !commandNamesToRemove.includes(cmd.name)
+      );
+
+      // Update the guild's commands with the filtered list
+      await rest.put(Routes.applicationCommands(this.user!.id), {
+        body: updatedCommands,
+      });
+
+      this.logger?.success(
+        `Successfully unregistered ${commandNamesToRemove.length} command(s)`
+      );
+    } catch (e) {
+      this.logger?.error(`Failed to unregister global commands: ${e}`);
+    }
   }
 }
