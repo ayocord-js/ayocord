@@ -1,4 +1,6 @@
-<img src="https://imgur.com/6hzTmgU.png" style="display: block; margin: 0 auto;">
+<div align="center">
+  <img src="https://i.imgur.com/6hzTmgU.png">
+</div>
 
 # Introduction
 
