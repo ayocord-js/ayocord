@@ -7,7 +7,7 @@ import {
   IEventOptions,
   ISlashCommandOptions,
   ITextCommandOptions,
-} from "../../interactions/decorators/methods";
+} from "../../interactions/decorators";
 import { IModuleOptions } from "@/packages/modules/decorators";
 import { CommandType } from "../types";
 
@@ -77,6 +77,26 @@ export class ModuleDiscordCollector {
   private isValidModule(value: Object): boolean {
     return !!this.getMetadata(value, MetadataKeys.MODULE);
   }
+
+  /**
+   * Is valid class event
+   */
+  private isValidEvent() {}
+
+  /**
+   * Is valid class SlashCommand
+   */
+  private isValidSlashCommand() {}
+
+  /**
+   * Is valid class TextCommand
+   */
+  private isValidTextCommand() {}
+
+  /**
+   * Is valid class AutoComplete
+   */
+  private isValidAutoComplete() {}
 
   /**
    * Processes the module by handling its decorated methods
