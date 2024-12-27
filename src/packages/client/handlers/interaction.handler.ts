@@ -91,7 +91,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
     try {
       const commandName = interaction.commandName;
 
-      // Проверяем, есть ли вложенные сабкоманды
+      
       const hasSubCommandGroup = interaction.options.data.some(
         (option) => option.type === ApplicationCommandOptionType.SubcommandGroup
       );
