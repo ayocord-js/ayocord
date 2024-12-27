@@ -3,6 +3,7 @@ import path from "path";
 import { DiscordClient } from "../client";
 import { MetadataKeys } from "../../../shared/types/metadata-keys.enum";
 import {
+  IAutoCompleteOptions,
   IComponentOptions,
   IEventOptions,
   ISlashCommandOptions,
@@ -10,6 +11,7 @@ import {
 } from "../../interactions/decorators";
 import { IModuleOptions } from "@/packages/modules/decorators";
 import { CommandType } from "../types";
+import { ISubCommandOptions } from "@/packages/interactions/decorators/sub-command.decorator";
 
 /**
  * Interface to represent the decorator metadata for methods
@@ -77,26 +79,6 @@ export class ModuleDiscordCollector {
   private isValidModule(value: Object): boolean {
     return !!this.getMetadata(value, MetadataKeys.MODULE);
   }
-
-  /**
-   * Is valid class event
-   */
-  private isValidEvent() {}
-
-  /**
-   * Is valid class SlashCommand
-   */
-  private isValidSlashCommand() {}
-
-  /**
-   * Is valid class TextCommand
-   */
-  private isValidTextCommand() {}
-
-  /**
-   * Is valid class AutoComplete
-   */
-  private isValidAutoComplete() {}
 
   /**
    * Processes the module by handling its decorated methods
@@ -180,6 +162,24 @@ export class ModuleDiscordCollector {
       this.client.textCommands.set(handlerId, {
         executor: boundMethod,
         options: metadata as ITextCommandOptions,
+        module: moduleMetadata,
+      });
+    } else if (metadataKey === MetadataKeys.AUTO_COMPLETE) {
+      const handlerId = `${metadata.parentName}_${
+        metadata.groupName ? "_" + metadata.groupName : ""
+      }${metadata.subCommandName ? "_" + metadata.subCommandName : ""}`;
+      this.client.autoComplete.set(handlerId, {
+        executor: boundMethod,
+        options: metadata as IAutoCompleteOptions,
+        module: moduleMetadata,
+      });
+    } else if (metadataKey === MetadataKeys.SUB_COMMAND) {
+      const handlerId = `${metadata.parentName}${
+        metadata.groupName ? "_" + metadata.groupName : ""
+      }_${metadata.name}`;
+      this.client.subCommands.set(handlerId, {
+        executor: boundMethod,
+        options: metadata as ISubCommandOptions,
         module: moduleMetadata,
       });
     }

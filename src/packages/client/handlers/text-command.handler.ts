@@ -54,7 +54,7 @@ export class TextCommandHandler extends BaseHandler implements IHandler {
      */
     if (!command) {
       this.client.logger?.warn(
-        "Intent GuildMessage or MessageContent not connected"
+        "Message no content"
       );
       return;
     }
@@ -152,13 +152,13 @@ export class TextCommandHandler extends BaseHandler implements IHandler {
             break;
         }
 
-        if (value !== null) break; // Stop checking types if a match is found
+        if (!value) break; // Stop checking types if a match is found
       }
 
       /**
        * Handle invalid or missing required arguments.
        */
-      if (value === null && isRequired) {
+      if (!value && isRequired) {
         this.client.logger?.warn(
           `Invalid or missing required argument: ${name}`
         );

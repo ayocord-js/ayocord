@@ -14,6 +14,7 @@ import {
   ITextCommandOptions,
 } from "../../interactions/decorators";
 import { IModuleOptions } from "@/packages/modules/decorators";
+import { ISubCommandOptions } from "@/packages/interactions/decorators/sub-command.decorator";
 
 export interface IModule {
   isEnabled: boolean;
@@ -52,12 +53,17 @@ export interface ITextCommandEntity extends IDiscordEntity {
   options: ITextCommandOptions;
 }
 
+export interface ISubCommandEntity extends IDiscordEntity {
+  options: ISubCommandOptions
+}
+
 export type ModuleCollection = Collection<string, IModule>;
 export type CommandCollection = Collection<string, ISlashCommandEntity>;
 export type EventCollection = Collection<string, IEventEntity>;
 export type AutoCompleteCollection = Collection<string, IAutoCompleteEntity>;
 export type ComponentCollection = Collection<string, IComponentEntity>;
 export type TextCommandCollection = Collection<string, ITextCommandEntity>;
+export type SubCommandCollection = Collection<string, ISubCommandEntity>;
 
 export interface ISynchronizeOptions {
   /**

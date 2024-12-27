@@ -1,5 +1,6 @@
 import {
   AnySelectMenuInteraction,
+  AutocompleteInteraction,
   ButtonInteraction,
   CommandInteraction,
   Events,
@@ -9,32 +10,58 @@ import {
 import { DiscordClient } from "../client";
 import { CustomIdParser } from "@/packages/utils/parsers/custom-id.parser";
 import { IHandler } from "../types/handler.interface";
-import { ISlashCommandOptions } from "@/packages/interactions";
 import { ISlashCommandEntity } from "../types";
 import { BaseHandler } from "./abstract.handler";
 
+/**
+ * Class responsible for handling interactions in Discord.
+ * It processes commands, subcommands, components, and autocomplete interactions.
+ */
 export class InteractionHandler extends BaseHandler implements IHandler {
+  /**
+   * Creates an instance of the InteractionHandler class.
+   * @param {DiscordClient} client - The Discord client instance to be used for event handling.
+   */
   constructor(client: DiscordClient) {
     super(client);
   }
-  connect(): void {
+
+  /**
+   * Connects the handler to the Discord client and listens for interaction events.
+   */
+  public connect(): void {
     this.client.on(Events.InteractionCreate, (interaction: Interaction) => {
       this.handle(interaction);
     });
   }
+
+  /**
+   * Handles various types of interactions, including commands, subcommands, components, and autocomplete.
+   * @param {Interaction} interaction - The interaction to handle.
+   */
   protected async handle(interaction: Interaction) {
     if (interaction.isCommand()) {
-      return await this.handleCommands(interaction);
+      await Promise.all([
+        this.handleCommands(interaction),
+        this.handleSubCommand(interaction),
+      ]);
+    }
+    if (interaction.isAutocomplete()) {
+      await this.handleAutoCompolete(interaction);
     }
     if (
       interaction.isButton() ||
       interaction.isAnySelectMenu() ||
       interaction.isModalSubmit()
     ) {
-      return await this.handleComponents(interaction);
+      await this.handleComponents(interaction);
     }
   }
 
+  /**
+   * Handles the execution of a slash command.
+   * @param {CommandInteraction} interaction - The interaction to handle.
+   */
   protected async handleCommands(interaction: CommandInteraction) {
     const commandFromCache = this.client.slashCommands.get(
       interaction.commandName
@@ -49,13 +76,42 @@ export class InteractionHandler extends BaseHandler implements IHandler {
         !this.client.devs?.includes(interaction.user.id)
       )
         return;
-      await commandFromCache.executor(interaction);
+      try {
+        await commandFromCache.executor(interaction);
+      } catch (e) {
+        this.client.logger?.error(e);
+      }
     }
   }
-  private async handleSubCommand(interaction: CommandInteraction) {
-    const commandName = interaction.commandName;
-    const subCommandName = (interaction.options as any).getSubcommand();
+
+  /**
+   * Handles the execution of a subcommand.
+   * @param {CommandInteraction} interaction - The interaction to handle.
+   */
+  protected async handleSubCommand(interaction: CommandInteraction) {
+    try {
+      const commandName = interaction.commandName;
+      const subCommandGroupName =
+        (interaction.options as any)?.getSubcommandGroup() || "";
+      const subCommandName =
+        (interaction.options as any)?.getSubcommand() || "";
+      const subCommandFromCache = this.client.subCommands.get(
+        `${commandName}_${
+          subCommandGroupName ? "_" + subCommandGroupName : ""
+        }_${subCommandName}` // Format to access the correct subcommand
+      );
+      try {
+        await subCommandFromCache?.executor(interaction);
+      } catch (e) {
+        this.client.logger?.error(e);
+      }
+    } catch {}
   }
+
+  /**
+   * Handles interactions with components (e.g., buttons, select menus, modals).
+   * @param {ButtonInteraction | ModalSubmitInteraction | AnySelectMenuInteraction} interaction - The interaction to handle.
+   */
   protected async handleComponents(
     interaction:
       | ButtonInteraction
@@ -81,8 +137,34 @@ export class InteractionHandler extends BaseHandler implements IHandler {
         return;
       const createdAt = interaction.message?.createdTimestamp;
       if (createdAt && ttl && createdAt + ttl <= Date.now()) return;
-      await componentFromCache.executor(interaction, args.slice(0, -1));
+      try {
+        await componentFromCache.executor(interaction, args.slice(0, -1));
+      } catch (e) {
+        this.client.logger?.error(e);
+      }
     }
   }
-  protected async handleAutoCompolete() {}
+
+  /**
+   * Handles autocomplete interactions for slash commands and subcommands.
+   * @param {AutocompleteInteraction} interaction - The interaction to handle.
+   */
+  protected async handleAutoCompolete(interaction: AutocompleteInteraction) {
+    try {
+      const commandName = interaction.commandName;
+      const subCommandGroupName =
+        (interaction.options as any).getSubcommandGroup() || "";
+      const subCommandName = (interaction.options as any).getSubcommand() || "";
+      const autoCompleteFromCache = this.client.autoComplete.get(
+        `${commandName}_${
+          subCommandGroupName ? "_" + subCommandGroupName : ""
+        }_${subCommandName}` // Format to access the correct autocomplete handler
+      );
+      try {
+        await autoCompleteFromCache?.executor(interaction);
+      } catch (e) {
+        this.client.logger?.error(e);
+      }
+    } catch {}
+  }
 }

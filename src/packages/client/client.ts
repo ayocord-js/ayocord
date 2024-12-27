@@ -15,6 +15,7 @@ import {
   IDiscordClientOptions,
   ISynchronizeOptions,
   ModuleCollection,
+  SubCommandCollection,
   TextCommandCollection,
 } from "./types/client.types";
 
@@ -25,6 +26,7 @@ import {
 export class DiscordClient extends Client {
   public modules: ModuleCollection;
   public slashCommands: CommandCollection;
+  public subCommands: SubCommandCollection;
   public events: EventCollection;
   public components: ComponentCollection;
   public autoComplete: AutoCompleteCollection;
@@ -50,6 +52,7 @@ export class DiscordClient extends Client {
     this.autoComplete = new Collection();
     this.components = new Collection();
     this.textCommands = new Collection();
+    this.subCommands = new Collection();
 
     this.applicationName = options.applicationName;
     this.version = options.version;
