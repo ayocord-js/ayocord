@@ -5,4 +5,5 @@ export enum MetadataKeys {
   COMPONENT = "component",
   TEXT_COMMAND = "textcommands",
   AUTO_COMPLETE = "autocomplete",
+  SUB_COMMAND = "subcommand",
 }

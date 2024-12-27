@@ -117,20 +117,9 @@ export class ModuleDiscordCollector {
           module: moduleMetadata,
           isEnabled: true,
         }),
-        this.addHandler(module, method, MetadataKeys.EVENT, moduleMetadata),
-        this.addHandler(module, method, MetadataKeys.COMPONENT, moduleMetadata),
-        this.addHandler(
-          module,
-          method,
-          MetadataKeys.SLASH_COMMAND,
-          moduleMetadata
-        ),
-        this.addHandler(
-          module,
-          method,
-          MetadataKeys.TEXT_COMMAND,
-          moduleMetadata
-        ),
+        Object.values(MetadataKeys).map((value) => {
+          this.addHandler(module, method, value, moduleMetadata);
+        }),
       ])
     );
 

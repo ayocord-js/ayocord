@@ -67,28 +67,14 @@ export interface ITextCommandOptions {
  * ```
  */
 export const TextCommand = (options: ITextCommandOptions) => {
-  return (
-    target: any,
-    propertyKey?: string,
-    descriptor?: PropertyDescriptor
-  ) => {
-    if (propertyKey && descriptor) {
-      // Method decorator logic
-      Reflect.defineMetadata(
-        MetadataKeys.TEXT_COMMAND,
-        options,
-        target,
-        propertyKey
-      );
-      return descriptor;
-    } else {
-      // Class decorator logic
-      Reflect.defineMetadata(
-        MetadataKeys.TEXT_COMMAND,
-        options,
-        target.prototype
-      );
-      return target;
-    }
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+    // Method decorator logic
+    Reflect.defineMetadata(
+      MetadataKeys.TEXT_COMMAND,
+      options,
+      target,
+      propertyKey
+    );
+    return descriptor;
   };
 };

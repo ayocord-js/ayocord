@@ -33,7 +33,7 @@ export type TComponentInteraction =
 
 /**
  * Universal decorator for handling any Discord.js component.
- * Supports both class-level and method-level usage, with argument parsing.
+ * Supports method-level usage, with argument parsing.
  *
  * @param options - Configuration options for the component.
  * @example
@@ -46,73 +46,28 @@ export type TComponentInteraction =
  *   }
  * }
  * ```
- *
- * **Class Usage:**
- * ```typescript
- * @Component({ customId: "my-menu" })
- * class MyMenuHandler {
- *   async execute(interaction: AnySelectMenuInteraction, args: any) {
- *     await interaction.reply(`Menu selected with args: ${JSON.stringify(args)}`);
- *   }
- * }
- * ```
  */
 export const Component = (options: IComponentOptions) => {
-  return (
-    target: any,
-    propertyKey?: string,
-    descriptor?: PropertyDescriptor
-  ) => {
-    if (propertyKey && descriptor) {
-      // Method decorator logic
-      const originalMethod = descriptor.value;
-      Reflect.defineMetadata(
-        MetadataKeys.COMPONENT,
-        options,
-        target,
-        propertyKey
-      );
-      descriptor.value = async function (interaction: TComponentInteraction) {
-        try {
-          const args = CustomIdParser.parseArguments(interaction.customId);
-          const result = await originalMethod.apply(this, [interaction, args]);
-          return result;
-        } catch (e) {
-          (interaction.client as DiscordClient).logger?.error(
-            `Error in Component method decorator: ${e}`
-          );
-        }
-      };
-      return descriptor;
-    } else {
-      // Class decorator logic
-      Reflect.defineMetadata(MetadataKeys.COMPONENT, options, target.prototype);
-
-      return class extends target {
-        constructor(...args: any[]) {
-          super(...args);
-        }
-
-        /**
-         * Automatically executes the interaction and passes arguments parsed from the customId.
-         */
-        async execute(interaction: TComponentInteraction) {
-          try {
-            const args = CustomIdParser.parseArguments(interaction.customId);
-            if (typeof super.execute === "function") {
-              await super.execute(interaction, args);
-            } else {
-              (interaction.client as DiscordClient).logger?.warn(
-                `No execute method found in class: ${this.constructor.name}`
-              );
-            }
-          } catch (e) {
-            (interaction.client as DiscordClient).logger?.error(
-              `Error in Component class decorator: ${e}`
-            );
-          }
-        }
-      };
-    }
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+    // Method decorator logic
+    const originalMethod = descriptor.value;
+    Reflect.defineMetadata(
+      MetadataKeys.COMPONENT,
+      options,
+      target,
+      propertyKey
+    );
+    descriptor.value = async function (interaction: TComponentInteraction) {
+      try {
+        const args = CustomIdParser.parseArguments(interaction.customId);
+        const result = await originalMethod.apply(this, [interaction, args]);
+        return result;
+      } catch (e) {
+        (interaction.client as DiscordClient).logger?.error(
+          `Error in Component method decorator: ${e}`
+        );
+      }
+    };
+    return descriptor;
   };
 };

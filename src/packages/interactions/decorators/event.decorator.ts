@@ -31,33 +31,18 @@ export interface IEventOptions {
  * ```
  */
 export const Event = (options: IEventOptions) => {
-  return (
-    target: any,
-    propertyKey?: string,
-    descriptor?: PropertyDescriptor
-  ) => {
-    if (propertyKey && descriptor) {
-      // Method decorator logic
-      const originalMethod = descriptor.value;
-      Reflect.defineMetadata(
-        MetadataKeys.EVENT,
-        options,
-        target,
-        propertyKey
-      );
-      descriptor.value = async function (...args: unknown[]) {
-        try {
-          const result = await originalMethod.apply(this, args);
-          return result;
-        } catch (e) {
-          console.error("Error in event method decorator:", e);
-        }
-      };
-      return descriptor;
-    } else {
-      // Class decorator logic
-      Reflect.defineMetadata(MetadataKeys.EVENT, options, target.prototype);
-      return target;
-    }
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+    // Method decorator logic
+    const originalMethod = descriptor.value;
+    Reflect.defineMetadata(MetadataKeys.EVENT, options, target, propertyKey);
+    descriptor.value = async function (...args: unknown[]) {
+      try {
+        const result = await originalMethod.apply(this, args);
+        return result;
+      } catch (e) {
+        console.error("Error in event method decorator:", e);
+      }
+    };
+    return descriptor;
   };
 };

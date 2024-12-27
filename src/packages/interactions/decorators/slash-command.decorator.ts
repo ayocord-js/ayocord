@@ -63,28 +63,14 @@ export interface ISlashCommandOptions {
  * ```
  */
 export const SlashCommand = (options: ISlashCommandOptions) => {
-  return (
-    target: any,
-    propertyKey?: string,
-    descriptor?: PropertyDescriptor
-  ) => {
-    if (propertyKey && descriptor) {
-      // Method decorator logic
-      Reflect.defineMetadata(
-        MetadataKeys.SLASH_COMMAND,
-        options,
-        target,
-        propertyKey
-      );
-      return descriptor;
-    } else {
-      // Class decorator logic
-      Reflect.defineMetadata(
-        MetadataKeys.SLASH_COMMAND,
-        options,
-        target.prototype
-      );
-      return target;
-    }
+  return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
+    // Method decorator logic
+    Reflect.defineMetadata(
+      MetadataKeys.SLASH_COMMAND,
+      options,
+      target,
+      propertyKey
+    );
+    return descriptor;
   };
 };

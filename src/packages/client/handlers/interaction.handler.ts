@@ -52,6 +52,10 @@ export class InteractionHandler extends BaseHandler implements IHandler {
       await commandFromCache.executor(interaction);
     }
   }
+  private async handleSubCommand(interaction: CommandInteraction) {
+    const commandName = interaction.commandName;
+    const subCommandName = (interaction.options as any).getSubcommand();
+  }
   protected async handleComponents(
     interaction:
       | ButtonInteraction
