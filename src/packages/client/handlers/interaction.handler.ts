@@ -43,7 +43,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
   protected async handle(interaction: Interaction) {
     if (interaction.isCommand()) {
       this.handleCommands(interaction);
-      // this.handleSubCommand(interaction);
+      this.handleSubCommand(interaction);
     }
     if (interaction.isAutocomplete()) {
       await this.handleAutoCompolete(interaction);
@@ -91,7 +91,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
     try {
       const commandName = interaction.commandName;
 
-      // Проверяем, есть ли вложенные сабкоманды
+      
       const hasSubCommandGroup = interaction.options.data.some(
         (option) => option.type === ApplicationCommandOptionType.SubcommandGroup
       );
