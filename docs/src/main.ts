@@ -1,6 +1,8 @@
 import { createApp } from "vue";
-import "./style.css";
+import { pinia, vuetify } from "./plugins";
+import router from "./plugins/router";
 import App from "./App.vue";
-import { pinia, router, vuetify } from "./plugins";
+//@ts-ignore
+import "@fontsource/m-plus-rounded-1c/700.css";
 
-createApp(App).use(pinia).use(vuetify).use(router).mount("#app");
+createApp(App).use(vuetify).use(pinia).use(router).mount("#app");
