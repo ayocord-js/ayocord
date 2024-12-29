@@ -6,7 +6,7 @@
     :width="130"
     height="50"
   >
-    {{ button.name }}
+    <p class="text-text">{{ button.name }}</p>
   </v-btn>
 </template>
 
@@ -21,6 +21,9 @@ defineProps({
 
 <style scoped>
 .button-outline {
-  border-color: linear-gradient(90deg, #66c0ff, #3d7399) !important;
+  position: relative;
+  border: 2px solid;
+  border-radius: 1rem;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 </style>

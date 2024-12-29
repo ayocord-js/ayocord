@@ -4,9 +4,7 @@
   >
     <Logo class="hidden mx-10 sm:block" width="350" />
 
-    <div
-      class="flex flex-col items-center justify-center text-center sm:gap-2"
-    >
+    <div class="flex flex-col items-center justify-center text-center sm:gap-2">
       <h2 class="text-3xl sm:text-5xl font-semibold text-gradient glow-text">
         Ayocord
       </h2>
@@ -21,6 +19,10 @@
           "
         />
       </div>
+      <div class="flex space-x-1 opacity-60">
+        <p>Thx for design my friend</p>
+        <a class="text-primary" href="https://t.me/pvashkaa">@pvashkaa</a>
+      </div>
     </div>
   </div>
 </template>
@@ -32,8 +34,8 @@ import { Routes } from "../utils";
 import { navigateTo } from "../utils/navigateTo";
 
 const buttons = [
+  { name: "Reference", link: Routes.reference },
   { name: "Docs", link: Routes.docs },
-  { name: "Guide", link: Routes.guide },
   { name: "Source", link: Routes.source },
 ];
 </script>

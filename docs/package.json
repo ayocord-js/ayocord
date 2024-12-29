@@ -13,6 +13,7 @@
     "@fontsource/roboto": "^5.1.0",
     "@mdi/font": "^7.4.47",
     "pinia": "^2.3.0",
+    "vite-plugin-md": "^0.21.5",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
     "vuetify": "^3.7.6"

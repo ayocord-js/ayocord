@@ -12,7 +12,7 @@
       <v-btn
         @click="navigateTo(Routes.main)"
         color="primary"
-        class="rounded-xl text-text border-none"
+        class="rounded-xl text-text"
       >
         Go back
       </v-btn>
