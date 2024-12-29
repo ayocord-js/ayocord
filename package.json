@@ -5,9 +5,6 @@
   "main": "index.js",
   "type": "commonjs",
   "license": "MIT",
-  "peerDependencies": {
-    "discord.js": "^14.16.3"
-  },
   "scripts": {
     "build": "npx tsc --build && npx tsc-alias"
   },
@@ -16,6 +13,7 @@
     "@types/node": "^22.10.2",
     "@types/node-schedule": "^2.1.7",
     "discord.js": "^14.16.3",
+    "sass": "^1.83.0",
     "tsup": "^8.3.5",
     "typedoc": "^0.27.6",
     "typescript": "^5.7.2"
