@@ -1,9 +1,12 @@
 {
   "name": "ayocord",
   "description": "This a wrapper under the discord.js. It simplify development",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "index.js",
   "license": "MIT",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "npx tsup"
   },
