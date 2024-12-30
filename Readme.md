@@ -8,7 +8,11 @@
 
 Ayocord is a discord.js typescript framework based on decorators
 
-### Installation
+## Documenation
+
+Check our <a href="https://www.ayocord.tech/docs/">documentation</a>
+
+## Installation
 
 > npm
 
