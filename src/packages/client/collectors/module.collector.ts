@@ -36,7 +36,7 @@ export class ModuleDiscordCollector {
    * Collects all module files and processes their decorated methods
    */
   async collect(): Promise<void> {
-    const extension = require.main!.filename.endsWith(".js") ? "js" : "ts"; // Determine file extension (js or ts)
+    const extension = require.main?.filename.endsWith(".js") ? "js" : "ts"; // Determine file extension (js or ts)
 
     // Retrieve all files with the determined extension, ignoring node_modules
     const files = await glob(`**/*.${extension}`, {

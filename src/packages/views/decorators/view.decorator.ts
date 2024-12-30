@@ -22,13 +22,6 @@ export const View = (options: IViewOptions) => {
       constructor(...args: any[]) {
         super(...args);
         Reflect.defineMetadata(MetadataKeys.View, options, BaseClass);
-        const viewKeys = [
-          MetadataKeys.Button,
-          MetadataKeys.StringSelect,
-          MetadataKeys.RoleSelect,
-          MetadataKeys.ChannelSelect,
-          MetadataKeys.Modal,
-        ];
         return;
       }
     };

@@ -1,5 +1,3 @@
-import { Interaction, Message } from "discord.js";
-
 export interface CanUse {
   canUse(
     context: any,
