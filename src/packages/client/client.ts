@@ -64,7 +64,7 @@ export class DiscordClient extends Client {
     this.logger = options.logger ?? new Logger();
     this.prefix = options.prefix;
     this.synchronize = options.synchronize ?? { global: true, guild: true };
-    this.token = options.token || this.config.get("TOKEN");
+    this.token = options.token || this.config.get("DISCORD_TOKEN");
   }
 
   async moduleEnable(name: string) {
