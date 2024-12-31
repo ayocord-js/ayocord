@@ -19,6 +19,10 @@
     "importHelpers": false,
     "downlevelIteration": true,
     "stripInternal": true,
+    "noFallthroughCasesInSwitch": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictNullChecks": true,
 
     "paths": {
       "@/*": ["./src/*"]
