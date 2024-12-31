@@ -15,6 +15,7 @@ import {
 } from "../../interactions/decorators";
 import { IModuleOptions } from "@/packages/modules/decorators";
 import { ISubCommandOptions } from "@/packages/interactions/decorators/sub-command.decorator";
+import { ConfigUtility } from "@/packages/utils";
 
 export interface IModule {
   isEnabled: boolean;
@@ -82,7 +83,8 @@ export interface IDiscordClientOptions extends ClientOptions {
   /**
    * Discord Bot token
    */
-  token: string;
+
+  token?: string;
   /**
    * How you call your ship then he swim
    */
@@ -96,6 +98,11 @@ export interface IDiscordClientOptions extends ClientOptions {
    * Who created this bot
    */
   devs?: Snowflake[];
+  /**
+   *
+   * By default instance of ConfigUtility class
+   */
+  config?: ConfigUtility;
   /**
    * Would you like to use custom logger or our ayologger - your choice
    */

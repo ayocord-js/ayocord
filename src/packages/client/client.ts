@@ -19,6 +19,7 @@ import {
   TextCommandCollection,
 } from "./types/client.types";
 import { DiscordModule } from "../modules";
+import { ConfigUtility } from "../utils";
 
 /**
  * Custom Discord Client class that extends the base Client functionality.
@@ -39,6 +40,7 @@ export class DiscordClient extends Client {
   public prefix?: string;
   public synchronize?: ISynchronizeOptions;
   public token: string;
+  private config: ConfigUtility;
 
   /**
    * Initializes a new instance of DiscordClient.
@@ -54,6 +56,7 @@ export class DiscordClient extends Client {
     this.components = new Collection();
     this.textCommands = new Collection();
     this.subCommands = new Collection();
+    this.config = options.config || new ConfigUtility();
 
     this.applicationName = options.applicationName;
     this.version = options.version;
@@ -61,7 +64,7 @@ export class DiscordClient extends Client {
     this.logger = options.logger ?? new Logger();
     this.prefix = options.prefix;
     this.synchronize = options.synchronize ?? { global: true, guild: true };
-    this.token = options.token;
+    this.token = options.token || this.config.get("TOKEN");
   }
 
   async moduleEnable(name: string) {
@@ -133,9 +136,12 @@ export class DiscordClient extends Client {
   /**
    * Logs the client in and synchronizes commands if enabled.
    */
-  public async login(): Promise<string> {
+  public async login(token?: string): Promise<string> {
     try {
-      await super.login(this.token);
+      await super.login(token || this.token);
+      if (token) {
+        this.token = token;
+      }
     } catch (e) {
       this.logger?.error(e);
       return "fail";
