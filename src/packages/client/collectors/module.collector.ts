@@ -153,14 +153,14 @@ export class ModuleDiscordCollector {
         module: moduleMetadata,
       });
     } else if (metadataKey === MetadataKeys.SLASH_COMMAND) {
-      const handlerId = `${metadata.builder!.name}`;
+      const handlerId = `${metadata.builder!.name.toLowerCase()}`;
       this.client.slashCommands.set(handlerId, {
         executor: boundMethod,
         options: metadata as ISlashCommandOptions,
         module: moduleMetadata,
       });
     } else if (metadataKey === MetadataKeys.TEXT_COMMAND) {
-      const handlerId = `${metadata.name}`;
+      const handlerId = `${metadata.name.toLowerCase()}`;
       this.client.textCommands.set(handlerId, {
         executor: boundMethod,
         options: metadata as ITextCommandOptions,

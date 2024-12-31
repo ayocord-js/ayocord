@@ -66,7 +66,7 @@ export class TextCommandHandler extends BaseHandler implements IHandler {
      * Retrieve the command configuration from the cache using its name.
      */
     const commandFromCache = this.client.textCommands.get(
-      commandName.replace(prefix, "")
+      commandName.replace(prefix, "").toLowerCase()
     );
 
     /**
