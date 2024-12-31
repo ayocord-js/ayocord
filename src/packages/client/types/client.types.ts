@@ -84,7 +84,7 @@ export interface IDiscordClientOptions extends ClientOptions {
    * Discord Bot token
    */
 
-  token?: string;
+  token: string;
   /**
    * How you call your ship then he swim
    */
