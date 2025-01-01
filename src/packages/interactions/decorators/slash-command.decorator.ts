@@ -1,5 +1,6 @@
 import { SlashCommandBuilder, Snowflake } from "discord.js";
 import { MetadataKeys } from "@/shared";
+import { DiscordClient } from "@/packages/client";
 
 export interface ISlashCommandSynchronizeOptions {
   /**
@@ -23,7 +24,7 @@ export interface ISlashCommandOptions {
     /**
      * A function to provide synchronization options asynchronously.
      */
-    useAsync?: () =>
+    useAsync?: (client?: DiscordClient) =>
       | Promise<ISlashCommandSynchronizeOptions>
       | ISlashCommandSynchronizeOptions;
 

@@ -60,7 +60,7 @@ export interface ISubCommandEntity extends IDiscordEntity {
 }
 
 export type ModuleCollection = Collection<string, IModule>;
-export type CommandCollection = Collection<string, ISlashCommandEntity>;
+export type SlashCommandCollection = Collection<string, ISlashCommandEntity>;
 export type EventCollection = Collection<string, IEventEntity>;
 export type AutoCompleteCollection = Collection<string, IAutoCompleteEntity>;
 export type ComponentCollection = Collection<string, IComponentEntity>;
@@ -126,7 +126,7 @@ export interface IDiscordClientOptions extends ClientOptions {
   /**
    * Collection of SlashCommands from modules
    */
-  slashCommands?: CommandCollection;
+  slashCommands?: SlashCommandCollection;
   /**
    * Collection of TextCommands
    */

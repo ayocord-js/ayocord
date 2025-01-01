@@ -9,7 +9,7 @@ import {
 import { Logger } from "ayologger";
 import {
   AutoCompleteCollection,
-  CommandCollection,
+  SlashCommandCollection,
   ComponentCollection,
   EventCollection,
   IDiscordClientOptions,
@@ -18,8 +18,8 @@ import {
   SubCommandCollection,
   TextCommandCollection,
 } from "./types/client.types";
-import { DiscordModule } from "../modules";
 import { ConfigUtility } from "../utils";
+import { CommandUtility } from "../slash-commands";
 
 /**
  * Custom Discord Client class that extends the base Client functionality.
@@ -27,7 +27,7 @@ import { ConfigUtility } from "../utils";
  */
 export class DiscordClient extends Client {
   public modules: ModuleCollection;
-  public slashCommands: CommandCollection;
+  public slashCommands: SlashCommandCollection;
   public subCommands: SubCommandCollection;
   public events: EventCollection;
   public components: ComponentCollection;
@@ -65,26 +65,6 @@ export class DiscordClient extends Client {
     this.prefix = options.prefix;
     this.synchronize = options.synchronize ?? { global: true, guild: true };
     this.token = options.token || this.config.get("DISCORD_TOKEN");
-  }
-
-  async moduleEnable(name: string) {
-    const module = this.modules.get(name);
-    if (!module) return;
-    this.modules.set(name, { ...module, isEnabled: false });
-    try {
-      //@ts-ignore
-      await (module.instance as DiscordModule)?.onLoad();
-    } catch {}
-  }
-
-  async moduleUnEnable(name: string) {
-    const module = this.modules.get(name);
-    if (!module) return;
-    this.modules.set(name, { ...module, isEnabled: false });
-    try {
-      //@ts-ignore
-      await (module.instance as DiscordModule)?.onUnload();
-    } catch {}
   }
 
   /**
@@ -156,93 +136,9 @@ export class DiscordClient extends Client {
     return "success";
   }
 
-  /**
-   * Synchronizes the slash commands across global and guild-specific contexts
-   * based on the synchronization options provided. It registers global commands
-   * if synchronization is enabled for global use, and registers guild-specific
-   * commands if synchronization is enabled for specific guilds.
-   *
-   * The method first checks the `synchronize` configuration. If `global` is enabled,
-   * it collects all commands that are marked for global synchronization and registers
-   * them globally. If `guild` is enabled, it fetches all guilds and registers the commands
-   * that are marked for synchronization within those specific guilds.
-   *
-   * Each command's `synchronize` property is examined to determine if it should be registered
-   * globally or within specific guilds. This allows flexible control over where commands should
-   * be available.
-   *
-   * The method uses `Promise.all` to execute command registration for both global and guild
-   * contexts concurrently, ensuring efficient handling of multiple command registrations.
-   *
-   * @returns {Promise<void>} A promise that resolves when all commands have been synchronized
-   * across global and guild contexts, or rejects if an error occurs during registration.
-   *
-   * @private
-   */
   private async synchronizeCommands() {
-    const promises = [];
-
-    // If global synchronization is enabled, register global commands
-    if (this.synchronize?.global) {
-      const commands = [] as SlashCommandBuilder[];
-
-      // Iterate over all slash commands
-      for (const [_, command] of this.slashCommands) {
-        // Determine synchronization settings for the command
-        const synchronize = command.options.synchronize
-          ? command.options.synchronize.useAsync
-            ? await command.options.synchronize.useAsync()
-            : command.options.synchronize.options
-          : { guilds: [], global: true };
-
-        // If the command is marked for global synchronization, add to global commands list
-        if (synchronize?.global) {
-          commands.push(command.options.builder);
-        }
-      }
-
-      // Register global commands
-      try {
-        promises.push(this.registerGlobalCommands(commands));
-      } catch (e) {
-        this.logger?.error(e);
-      }
-    }
-
-    // If guild-specific synchronization is enabled, register commands for each guild
-    if (this.synchronize?.guild) {
-      const guilds = await this.guilds.fetch();
-
-      // Iterate over all fetched guilds
-      for (const [_, guild] of guilds) {
-        const commands = [] as SlashCommandBuilder[];
-
-        // Iterate over all slash commands
-        for (const [_, command] of this.slashCommands) {
-          // Determine synchronization settings for the command
-          const synchronize = command.options.synchronize
-            ? command.options.synchronize.useAsync
-              ? await command.options.synchronize.useAsync()
-              : command.options.synchronize.options
-            : { guilds: [], global: true };
-
-          // If the command is marked for this specific guild, add to guild commands list
-          if (synchronize?.guilds.includes(guild.id)) {
-            commands.push(command.options.builder);
-          }
-        }
-
-        // Register guild-specific commands for each guild
-        try {
-          promises.push(this.registerGuildCommands(guild.id, commands));
-        } catch (e) {
-          this.logger?.error(e);
-        }
-      }
-    }
-
-    // Wait for all registration promises to complete
-    await Promise.all(promises);
+    const commands = await CommandUtility.getCommands(this, this.slashCommands);
+    await CommandUtility.synchronize(this, commands, true);
   }
 
   /**
