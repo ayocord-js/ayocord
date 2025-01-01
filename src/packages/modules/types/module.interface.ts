@@ -1,4 +1,6 @@
+import { DiscordClient } from "@/packages/client";
+
 export interface DiscordModule {
-  onLoad?: () => any | Promise<any>;
-  onDisable?: () => any | Promise<any>;
+  onEnable?: (client: DiscordClient) => any | Promise<any>;
+  onDisable?: (client: DiscordClient) => any | Promise<any>;
 }

@@ -1,6 +1,7 @@
 import { DiscordClient, IModule } from "@/packages/client";
 import { MetadataKeys } from "@/shared";
 import { CommandUtility } from "@/packages/slash-commands";
+import { DiscordModule } from "../types";
 
 /** Utility for managing modules */
 export class ModuleUtility {
@@ -49,6 +50,10 @@ export class ModuleUtility {
 
   async moduleEnable(name: string | Function) {
     const module = this.processModule(name);
+    const instance = module?.instance as DiscordModule;
+    if (instance.onEnable) {
+      return await instance.onEnable(this.client);
+    }
     if (!module) {
       this.client.logger?.warn(`Module ${name} does not exist.`);
       return;
@@ -74,6 +79,10 @@ export class ModuleUtility {
 
   async moduleDisable(name: string | Function) {
     const module = this.processModule(name);
+    const instance = module?.instance as DiscordModule;
+    if (instance.onDisable) {
+      return await instance.onDisable(this.client);
+    }
     if (!module) {
       this.client.logger?.warn(`Module ${name} does not exist.`);
       return;

@@ -122,8 +122,8 @@ One class = one module (cog in python sleng), however I hate python and love Typ
 - Decorators
   - [x] Module
 - Lifecycle
-  - [ ] onLoad
-  - [ ] onUnload
-- Module loader (Client functions)
-  - [ ] unloadModule
-  - [ ] loadModule
+  - [x] onEnabled
+  - [x] onDisable
+- Module util
+  - [x] moduleEnable
+  - [x] moduleDisable
