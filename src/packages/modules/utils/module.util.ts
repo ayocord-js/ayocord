@@ -1,12 +1,9 @@
 import {
   DiscordClient,
   IModule,
-  SlashCommandCollection,
 } from "@/packages/client";
-import { SlashCommandBuilder, Snowflake } from "discord.js";
 import { MetadataKeys } from "@/shared";
 import { CommandUtility } from "@/packages/slash-commands";
-
 
 /** Utility for managing modules */
 export class ModuleUtility {
@@ -44,13 +41,13 @@ export class ModuleUtility {
   }
 
   private async manageCommands(module: IModule, register: boolean) {
-    const { globalCommands, guildCommands } = await CommandUtility.getCommands(
+    const commands = await CommandUtility.getCommands(
       this.client,
       this.client.slashCommands.filter(
         (command) => command.module.name === module.module.name
       )
     );
-    
+    await CommandUtility.synchronize(this.client, commands, register);
   }
 
   async moduleEnable(name: string | Function) {
