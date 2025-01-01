@@ -53,7 +53,7 @@ One class = one module (cog in python sleng), however I hate python and love Typ
   - Discohook parser
   - CustomId parser
 
-## Reales Features
+## Realesed Features
 
 ### Launcher
 
