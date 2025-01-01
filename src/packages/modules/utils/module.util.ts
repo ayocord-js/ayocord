@@ -1,7 +1,4 @@
-import {
-  DiscordClient,
-  IModule,
-} from "@/packages/client";
+import { DiscordClient, IModule } from "@/packages/client";
 import { MetadataKeys } from "@/shared";
 import { CommandUtility } from "@/packages/slash-commands";
 
@@ -64,8 +61,15 @@ export class ModuleUtility {
       return;
     }
 
-    this.manageEvents(module, true);
-    await this.manageCommands(module, true);
+    await Promise.all([
+      this.client.modules.set(module.module.name, {
+        ...module,
+        isEnabled: true,
+      }),
+      this.manageEvents(module, true),
+      this.manageCommands(module, true),
+    ]);
+    return true;
   }
 
   async moduleDisable(name: string | Function) {
@@ -82,7 +86,14 @@ export class ModuleUtility {
       return;
     }
 
-    this.manageEvents(module, false);
-    await this.manageCommands(module, false);
+    await Promise.all([
+      this.client.modules.set(module.module.name, {
+        ...module,
+        isEnabled: false,
+      }),
+      this.manageEvents(module, false),
+      await this.manageCommands(module, false),
+    ]);
+    return true;
   }
 }
