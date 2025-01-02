@@ -17,9 +17,17 @@ import {
   ModuleCollection,
   SubCommandCollection,
   TextCommandCollection,
+  IDiscordClientCollector,
+  IDiscordClientHandler,
 } from "./types/client.types";
 import { ConfigUtility } from "../utils";
 import { CommandUtility } from "../slash-commands";
+import {
+  EventHandler,
+  handlers,
+  InteractionHandler,
+  TextCommandHandler,
+} from "./handlers";
 
 /**
  * Custom Discord Client class that extends the base Client functionality.
@@ -40,7 +48,9 @@ export class DiscordClient extends Client {
   public prefix?: string;
   public synchronize?: ISynchronizeOptions;
   public token: string;
-  private config: ConfigUtility;
+  public config: ConfigUtility;
+  public collector?: IDiscordClientCollector;
+  public handlers: IDiscordClientHandler;
 
   /**
    * Initializes a new instance of DiscordClient.
@@ -57,6 +67,13 @@ export class DiscordClient extends Client {
     this.textCommands = new Collection();
     this.subCommands = new Collection();
     this.config = options.config || new ConfigUtility();
+    this.handlers = options.handlers
+      ? {
+          ...handlers,
+          ...options.handlers,
+        }
+      : handlers;
+    this.collector = options.collector ? options.collector : { auto: true };
 
     this.applicationName = options.applicationName;
     this.version = options.version;

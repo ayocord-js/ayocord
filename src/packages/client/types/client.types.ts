@@ -16,6 +16,8 @@ import {
 import { IModuleOptions } from "@/packages/modules/decorators";
 import { ISubCommandOptions } from "@/packages/interactions/decorators/sub-command.decorator";
 import { ConfigUtility } from "@/packages/utils";
+import { DiscordModule } from "@/packages/modules";
+import { IHandler } from "./handler.interface";
 
 export interface IModule {
   isEnabled: boolean;
@@ -76,6 +78,20 @@ export interface ISynchronizeOptions {
    * Using for synchronize guild commands from SlashCommand decorator options
    */
   guild?: boolean;
+}
+
+export interface IDiscordClientHandler {
+  /**
+   * For commands, sub commands, component interactions, context menus
+   */
+  interaction?: Function;
+  textCommand?: Function;
+  event?: Function;
+}
+
+export interface IDiscordClientCollector {
+  auto?: boolean;
+  modules?: DiscordModule[];
 }
 
 export interface IDiscordClientOptions extends ClientOptions {
@@ -139,6 +155,12 @@ export interface IDiscordClientOptions extends ClientOptions {
    * Collection of auto-completes
    */
   autoComplete?: AutoCompleteCollection;
+
+  collector?: IDiscordClientCollector;
+  /**
+   * Your custom handlers impemention
+   */
+  handlers?: IDiscordClientHandler;
 }
 
 export type TEntity =
