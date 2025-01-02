@@ -17,7 +17,6 @@ export class DiscordFactory {
     const handlers = [interaction, textCommand, event];
     handlers.forEach((Handler: any) => {
       new Handler(client).connect();
-      client.logger?.success(`Handler ${Handler.name} connected successfully`);
     });
   }
 
@@ -62,7 +61,6 @@ export class DiscordFactory {
     // Connect handlers
     try {
       this.connectHandlers(client);
-      client.logger?.success(`Collector was successfully conected`);
     } catch (e) {
       client.logger?.error(e);
     }
@@ -75,14 +73,13 @@ export class DiscordFactory {
     Object.keys(bots).forEach((key) => {
       const bot = bots[key];
       const { options, modules: botModules } = bot;
-      console.log(key, botModules);
       const client = new DiscordClient({
         ...(DEFAULT?.options || { intents: [] }),
         ...options,
       });
       const modules: DiscordModule[] = [
         ...(DEFAULT?.modules || []),
-        ...botModules,
+        ...(botModules || []),
       ];
       try {
         this.connectCollector(client, modules);

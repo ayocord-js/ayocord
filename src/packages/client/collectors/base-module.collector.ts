@@ -90,7 +90,6 @@ export class BaseDiscordCollector {
       MetadataKeys.MODULE
     ) as IModuleOptions;
     const methods = this.getModuleMethods(module);
-
     // Process methods with associated event/component metadata
 
     const promises = methods.map((method) =>

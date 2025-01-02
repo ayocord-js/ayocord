@@ -55,14 +55,11 @@ export class ModuleUtility {
       return await instance.onEnable(this.client);
     }
     if (!module) {
-      this.client.logger?.warn(`Module ${name} does not exist.`);
       return;
     }
 
     if (module.isEnabled) {
-      this.client.logger?.warn(
-        `Module ${module.module.name} is already enabled.`
-      );
+
       return;
     }
 
@@ -84,14 +81,11 @@ export class ModuleUtility {
       return await instance.onDisable(this.client);
     }
     if (!module) {
-      this.client.logger?.warn(`Module ${name} does not exist.`);
+
       return;
     }
 
     if (!module.isEnabled) {
-      this.client.logger?.warn(
-        `Module ${module.module.name} is already disabled.`
-      );
       return;
     }
 

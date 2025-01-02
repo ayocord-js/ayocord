@@ -44,7 +44,6 @@ export class TextCommandHandler extends BaseHandler implements IHandler {
      * Logs a warning and exits if the prefix is not set.
      */
     if (!prefix) {
-      this.client.logger?.warn("Prefix not assigned in client options");
       return;
     }
 
@@ -53,9 +52,6 @@ export class TextCommandHandler extends BaseHandler implements IHandler {
      * Logs a warning and exits if the content is empty.
      */
     if (!command) {
-      this.client.logger?.warn(
-        "Message no content"
-      );
       return;
     }
 
@@ -73,7 +69,6 @@ export class TextCommandHandler extends BaseHandler implements IHandler {
      * Log a warning if the command is not found in the cache.
      */
     if (!commandFromCache) {
-      this.client.logger?.warn(`Command with name ${commandName} not found`);
       return;
     }
 
@@ -84,9 +79,6 @@ export class TextCommandHandler extends BaseHandler implements IHandler {
      * Logs a warning and exits if the module is disabled.
      */
     if (!this.getModuleFromCache(commandFromCache)) {
-      this.client.logger?.warn(
-        `Module ${module.name} is not enabled. Command ${commandName} cannot be executed`
-      );
       return;
     }
 
@@ -117,7 +109,6 @@ export class TextCommandHandler extends BaseHandler implements IHandler {
        */
       if (currentIndex >= messageArgs.length) {
         if (isRequired) {
-          this.client.logger?.warn(`Missing required argument: ${name}`);
           return;
         }
         break;
@@ -159,9 +150,6 @@ export class TextCommandHandler extends BaseHandler implements IHandler {
        * Handle invalid or missing required arguments.
        */
       if (!value && isRequired) {
-        this.client.logger?.warn(
-          `Invalid or missing required argument: ${name}`
-        );
         return;
       }
 

@@ -65,7 +65,6 @@ export class InteractionHandler extends BaseHandler implements IHandler {
     const commandFromCache = this.client.slashCommands.get(
       interaction.commandName
     );
-    console.log(commandFromCache);
     if (commandFromCache) {
       const { options, module } =
         commandFromCache as unknown as ISlashCommandEntity;
@@ -106,15 +105,10 @@ export class InteractionHandler extends BaseHandler implements IHandler {
         : "";
 
       const subCommandFromCache = this.client.subCommands.get(
-        `${commandName}${
-          subCommandGroupName.length ? "_" + subCommandGroupName : ""
-        }${subCommandName.length ? "_" + subCommandName : ""}`
+        this.getSubCommand(commandName, subCommandGroupName, subCommandName)
       );
 
       if (!subCommandFromCache) {
-        this.client.logger?.warn(
-          `Subcommand not found: ${commandName}_${subCommandGroupName}_${subCommandName}`
-        );
         return;
       }
 
@@ -126,6 +120,16 @@ export class InteractionHandler extends BaseHandler implements IHandler {
     } catch (e) {
       this.client.logger?.error(e);
     }
+  }
+
+  private getSubCommand(
+    commandName: string,
+    subCommandGroupName: string = "",
+    subCommandName: string = ""
+  ) {
+    return `${commandName}${
+      subCommandGroupName.length ? "_" + subCommandGroupName : ""
+    }${subCommandName.length ? "+" + subCommandName : ""}`;
   }
 
   /**
@@ -188,15 +192,10 @@ export class InteractionHandler extends BaseHandler implements IHandler {
         : "";
 
       const autoCompleteFromCache = this.client.autoComplete.get(
-        `${commandName}${
-          subCommandGroupName.length ? "_" + subCommandGroupName : ""
-        }${subCommandName.length ? "_" + subCommandName : ""}`
+        this.getSubCommand(commandName, subCommandGroupName, subCommandName)
       );
 
       if (!autoCompleteFromCache) {
-        this.client.logger?.warn(
-          `Autocomplete handler not found: ${commandName}_${subCommandGroupName}_${subCommandName}`
-        );
         return;
       }
 

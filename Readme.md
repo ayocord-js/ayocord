@@ -32,6 +32,7 @@ I always write handlers for my bots and it was really boring and sometimes hard 
 For each commands you **must** create files <br>
 In python discord libraries we're using decorators for solving this problem <br>
 One class = one module (cog in python sleng), however I hate python and love TypeScript ecosystem but this way for creating discord bots I like and I decided to create this framework <br>
+
 ## Features
 
 - **Decorator Based Syntax** - use TypeScript decorators and class based way to write your discord bot
@@ -52,6 +53,7 @@ One class = one module (cog in python sleng), however I hate python and love Typ
   - Snowflake parser
   - Discohook parser
   - CustomId parser
+- **Multi tokens** - allow you launch few bots simultaneously
 
 ## Realesed Features
 

@@ -60,13 +60,11 @@ export class CommandUtility {
     const promises: Promise<any>[] = [];
     const { globalCommands, guildCommands } = commands;
 
-    if (globalCommands.length) {
-      promises.push(
-        register
-          ? client.registerGlobalCommands(globalCommands)
-          : client.unRegisterGlobalCommands(globalCommands)
-      );
-    }
+    promises.push(
+      register
+        ? client.registerGlobalCommands(globalCommands)
+        : client.unRegisterGlobalCommands(globalCommands)
+    );
 
     for (const guildId in guildCommands) {
       const commands = guildCommands[guildId].commands;

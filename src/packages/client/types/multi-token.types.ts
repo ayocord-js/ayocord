@@ -8,7 +8,7 @@ export interface IMultiTokenBot {
    *
    * Which use @Module decorator
    */
-  modules: any[];
+  modules?: any[];
 }
 
 export interface IMultiTokenOptions {

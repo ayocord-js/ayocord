@@ -73,7 +73,7 @@ export class DiscordClient extends Client {
           ...options.handlers,
         }
       : handlers;
-    this.collector = options.collector ? options.collector : { auto: true };
+    this.collector = options.collector;
 
     this.applicationName = options.applicationName;
     this.version = options.version;
@@ -95,9 +95,7 @@ export class DiscordClient extends Client {
         body: commands,
       });
       if (commands.length >= 1) {
-        this.logger?.success(
-          `Successfully registered ${commands.length} global command(s).`
-        );
+        return commands
       }
     } catch (e) {
       this.logger?.error(`Failed to register global commands: ${e}`);
@@ -118,11 +116,7 @@ export class DiscordClient extends Client {
       await rest.put(Routes.applicationGuildCommands(this.user!.id, guildId), {
         body: commands,
       });
-      if (commands.length >= 1) {
-        this.logger?.success(
-          `Successfully registered ${commands.length} command(s) for guild with ID: ${guildId}.`
-        );
-      }
+      return commands
     } catch (e) {
       this.logger?.error(
         `Failed to register guild commands for ${guildId}: ${e}`
@@ -189,9 +183,6 @@ export class DiscordClient extends Client {
         body: updatedCommands,
       });
 
-      this.logger?.success(
-        `Successfully unregistered ${commandNamesToRemove.length} command(s) for guild with ID: ${guildId}.`
-      );
     } catch (e) {
       this.logger?.error(
         `Failed to unregister guild commands for ${guildId}: ${e}`
@@ -221,9 +212,7 @@ export class DiscordClient extends Client {
         body: updatedCommands,
       });
 
-      this.logger?.success(
-        `Successfully unregistered ${commandNamesToRemove.length} command(s)`
-      );
+      return updatedCommands
     } catch (e) {
       this.logger?.error(`Failed to unregister global commands: ${e}`);
     }
