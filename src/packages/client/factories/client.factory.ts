@@ -73,9 +73,15 @@ export class DiscordFactory {
     Object.keys(bots).forEach((key) => {
       const bot = bots[key];
       const { options, modules: botModules } = bot;
+      const intents = [
+        // @ts-ignore
+        ...(DEFAULT?.options.intents || []),
+        ...(options.intents || []),
+      ];
       const client = new DiscordClient({
-        ...(DEFAULT?.options || { intents: [] }),
+        ...DEFAULT?.options,
         ...options,
+        intents,
       });
       const modules: DiscordModule[] = [
         ...(DEFAULT?.modules || []),
