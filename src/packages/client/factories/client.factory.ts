@@ -48,7 +48,7 @@ export class DiscordFactory {
    *   synchronize: { global: true, guild: true },
    * });
    */
-  public static async create(options: IDiscordClientOptions) {
+  public static create(options: IDiscordClientOptions) {
     // Create a new instance of DiscordClient
     const client = new DiscordClient({ ...options });
 
@@ -69,8 +69,8 @@ export class DiscordFactory {
     return client;
   }
 
-  public static async createMultiToken(options: IMultiTokenOptions) {
-    const loginPromises: any[] = [];
+  public static createMultiToken(options: IMultiTokenOptions) {
+    const clients: DiscordClient[] = [];
     const { bots, DEFAULT } = options;
     Object.keys(bots).forEach((key) => {
       const bot = bots[key];
@@ -97,8 +97,8 @@ export class DiscordFactory {
       }
       // Set bot to cache
       MultiTokenBotsUitility.set(key.toLowerCase(), client);
-      loginPromises.push(client.login());
+      clients.push(client);
     });
-    await Promise.all(loginPromises);
+    return clients;
   }
 }

@@ -57,7 +57,7 @@ export class DiscordClient extends Client {
    * @param options - Options for configuring the client, including modules, commands, and logger.
    */
   constructor(options: IDiscordClientOptions) {
-    super({ ...options });
+    super({ ...options, intents: options.intents ?? [] });
 
     this.modules = new Collection();
     this.events = new Collection();

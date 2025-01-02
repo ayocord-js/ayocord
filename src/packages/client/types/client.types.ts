@@ -91,11 +91,15 @@ export interface IDiscordClientHandler {
 
 export interface IDiscordClientCollector {
   auto?: boolean;
-  modules?: DiscordModule[];
+  /**
+   * Modules that you want to connect
+   */
+  modules?: any[];
 }
 
+// @ts-ignore
 export interface IDiscordClientOptions extends ClientOptions {
-  intents: BitFieldResolvable<GatewayIntentsString, number>;
+  intents?: BitFieldResolvable<GatewayIntentsString, number>;
   /**
    * Discord Bot token
    */
