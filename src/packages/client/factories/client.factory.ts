@@ -26,13 +26,13 @@ export class DiscordFactory {
     modules: DiscordModule[] = []
   ) {
     const { collector } = client;
-    if (collector?.auto) {
-      new AutoDiscordCollector(client).collect();
-    }
-    if (collector?.modules?.length) {
-      new ModuleDiscordCollector(client).collect(
-        client.collector?.modules || modules
+    if (collector?.modules?.length || modules.length) {
+      return new ModuleDiscordCollector(client).collect(
+        modules.length ? modules : collector?.modules || []
       );
+    }
+    if (collector?.auto) {
+      return new AutoDiscordCollector(client).collect();
     }
   }
 
@@ -75,6 +75,7 @@ export class DiscordFactory {
     Object.keys(bots).forEach((key) => {
       const bot = bots[key];
       const { options, modules: botModules } = bot;
+      console.log(key, botModules);
       const client = new DiscordClient({
         ...(DEFAULT?.options || { intents: [] }),
         ...options,

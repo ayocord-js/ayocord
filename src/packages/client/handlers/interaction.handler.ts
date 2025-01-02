@@ -91,7 +91,6 @@ export class InteractionHandler extends BaseHandler implements IHandler {
     try {
       const commandName = interaction.commandName;
 
-      
       const hasSubCommandGroup = interaction.options.data.some(
         (option) => option.type === ApplicationCommandOptionType.SubcommandGroup
       );
@@ -107,9 +106,9 @@ export class InteractionHandler extends BaseHandler implements IHandler {
         : "";
 
       const subCommandFromCache = this.client.subCommands.get(
-        `${commandName}_${
-          subCommandGroupName ? "_" + subCommandGroupName : ""
-        }_${subCommandName}`
+        `${commandName}${
+          subCommandGroupName.length ? "_" + subCommandGroupName : ""
+        }${subCommandName.length ? "_" + subCommandName : ""}`
       );
 
       if (!subCommandFromCache) {
@@ -189,9 +188,9 @@ export class InteractionHandler extends BaseHandler implements IHandler {
         : "";
 
       const autoCompleteFromCache = this.client.autoComplete.get(
-        `${commandName}_${
-          subCommandGroupName ? "_" + subCommandGroupName : ""
-        }_${subCommandName}`
+        `${commandName}${
+          subCommandGroupName.length ? "_" + subCommandGroupName : ""
+        }${subCommandName.length ? "_" + subCommandName : ""}`
       );
 
       if (!autoCompleteFromCache) {
