@@ -8,7 +8,7 @@ export interface IMultiTokenBot {
    *
    * Which use @Module decorator
    */
-  modules: DiscordModule[];
+  modules: any[];
 }
 
 export interface IMultiTokenOptions {
