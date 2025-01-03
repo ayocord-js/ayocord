@@ -3,7 +3,7 @@ import path from "path";
 
 export interface IDecoratorMetadataKeys {
   key: string; // The name of the method
-  method: unknown; // The actual method reference
+  method: Function; // The actual method reference
 }
 
 export interface ICollector {
@@ -16,7 +16,7 @@ export class BaseCollector {
    * @param module The module class to analyze.
    * @returns An array of methods and their associated metadata keys.
    */
-  protected getModuleMethods(module: any): IDecoratorMetadataKeys[] {
+  public static getModuleMethods(module: any): IDecoratorMetadataKeys[] {
     return Object.getOwnPropertyNames(module.prototype)
       .filter((key) => key !== "constructor")
       .map((key) => ({
@@ -41,7 +41,7 @@ export class BaseCollector {
         } catch {}
       })
     );
-    return modules;
+    return modules.map((module) => Object.values(module));
   }
 
   /**
@@ -66,6 +66,7 @@ export class BaseCollector {
     return Reflect.getMetadata(metadataKey, target) || null;
   }
   protected isValidClass(target: any, metadataKey: string) {
-    return Boolean(Reflect.getMetadata(metadataKey, target));
+    const isValid = Reflect.getMetadata(metadataKey, target)
+    return !!isValid;
   }
 }

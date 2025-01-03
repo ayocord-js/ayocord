@@ -34,9 +34,12 @@ export class AutoDiscordCollector extends BaseCollector {
     const modules = await this.getAllProjectModules();
     await Promise.allSettled(
       modules.map((module) => {
-        if (this.isValidClass(module, ModuleMetadataKeys.MODULE)) {
-          this.processModule(module);
-        }
+        module.map((value: any) => {
+          const isValid = this.isValidClass(value, ModuleMetadataKeys.MODULE)
+          if (isValid) {
+            this.processModule(value);
+          }
+        });
       })
     );
   }
@@ -51,7 +54,7 @@ export class AutoDiscordCollector extends BaseCollector {
       ModuleMetadataKeys.MODULE
     ) as IModuleOptions;
 
-    const methods = this.getModuleMethods(module);
+    const methods = BaseCollector.getModuleMethods(module);
     const moduleInstance = new module();
 
     this.client.modules.set(moduleMetadata.name, {

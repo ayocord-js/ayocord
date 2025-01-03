@@ -4,6 +4,7 @@ import { AutoDiscordCollector, ModuleDiscordCollector } from "../collectors";
 import { IMultiTokenOptions } from "../types";
 import { DiscordModule } from "@/packages/modules";
 import { MultiTokenBotsUitility } from "../utils";
+import { ViewDiscordCollector } from "../collectors/view.collector";
 
 /**
  * A factory for creating and configuring a Discord client.
@@ -12,7 +13,7 @@ export class DiscordFactory {
   /**
    * This method connect all handlers for client
    */
-  private static connectHandlers(client: DiscordClient) {
+  private static async connectHandlers(client: DiscordClient) {
     const { interaction, event, textCommand } = client.handlers;
     const handlers = [interaction, textCommand, event];
     handlers.forEach((Handler: any) => {
@@ -20,19 +21,22 @@ export class DiscordFactory {
     });
   }
 
-  private static connectCollector(
+  private static async connectModuleCollector(
     client: DiscordClient,
     modules: DiscordModule[] = []
   ) {
     const { collector } = client;
-    if (collector?.modules?.length || modules.length) {
-      return new ModuleDiscordCollector(client).collect(
-        modules.length ? modules : collector?.modules || []
-      );
-    }
+    const modules_ = modules.length ? modules : collector?.modules || [];
     if (collector?.auto) {
-      return new AutoDiscordCollector(client).collect();
+      return await new AutoDiscordCollector(client).collect();
     }
+    if (collector?.modules?.length || modules.length) {
+      return await new ModuleDiscordCollector(client).collect(modules_);
+    }
+  }
+
+  private static connectViewCollector(client: DiscordClient) {
+    return new ViewDiscordCollector(client).collect();
   }
 
   /**
@@ -53,18 +57,32 @@ export class DiscordFactory {
 
     // Connect collector
     try {
-      this.connectCollector(client);
-    } catch (e) {
-      client.logger?.error(e);
-    }
-
-    // Connect handlers
-    try {
-      this.connectHandlers(client);
+      this.connectCollectors(client, []);
     } catch (e) {
       client.logger?.error(e);
     }
     return client;
+  }
+
+  private static connectCollectors(
+    client: DiscordClient,
+    modules: DiscordModule[]
+  ) {
+    try {
+      this.connectModuleCollector(client, modules);
+    } catch (e) {
+      client.logger?.error(`Error while connecting module collector`);
+    }
+    try {
+      this.connectViewCollector(client);
+    } catch {
+      client.logger?.error(`Error while connecting view collector`);
+    }
+    try {
+      this.connectHandlers(client);
+    } catch (e) {
+      client.logger?.error(`Error while connecting handler`);
+    }
   }
 
   public static createMultiToken(options: IMultiTokenOptions) {
@@ -88,16 +106,9 @@ export class DiscordFactory {
         ...(botModules || []),
       ];
       try {
-        this.connectCollector(client, modules);
+        this.connectCollectors(client, modules);
       } catch (e) {
-        client.logger?.error(
-          `Error while connecting collector for bot: ${key}`
-        );
-      }
-      try {
-        this.connectHandlers(client);
-      } catch (e) {
-        client.logger?.error(`Error while connecting handler for bot: ${key}`);
+        client.logger?.error(e);
       }
       // Set bot to cache
       MultiTokenBotsUitility.set(key.toLowerCase(), client);

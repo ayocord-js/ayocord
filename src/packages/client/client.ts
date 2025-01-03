@@ -19,6 +19,7 @@ import {
   TextCommandCollection,
   IDiscordClientCollector,
   IDiscordClientHandler,
+  ViewCollection,
 } from "./types/client.types";
 import { ConfigUtility } from "../utils";
 import { CommandUtility } from "../slash-commands";
@@ -39,6 +40,10 @@ export class DiscordClient extends Client {
   public subCommands: SubCommandCollection;
   public events: EventCollection;
   public components: ComponentCollection;
+  /**
+   * Same components but wrapped on view decorator
+   */
+  public views: ViewCollection;
   public autoComplete: AutoCompleteCollection;
   public textCommands: TextCommandCollection;
   public applicationName?: string;
@@ -66,6 +71,8 @@ export class DiscordClient extends Client {
     this.components = new Collection();
     this.textCommands = new Collection();
     this.subCommands = new Collection();
+    this.views = new Collection()
+
     this.config = options.config || new ConfigUtility();
     this.handlers = options.handlers
       ? {
@@ -95,7 +102,7 @@ export class DiscordClient extends Client {
         body: commands,
       });
       if (commands.length >= 1) {
-        return commands
+        return commands;
       }
     } catch (e) {
       this.logger?.error(`Failed to register global commands: ${e}`);
@@ -116,7 +123,7 @@ export class DiscordClient extends Client {
       await rest.put(Routes.applicationGuildCommands(this.user!.id, guildId), {
         body: commands,
       });
-      return commands
+      return commands;
     } catch (e) {
       this.logger?.error(
         `Failed to register guild commands for ${guildId}: ${e}`
@@ -182,7 +189,6 @@ export class DiscordClient extends Client {
       await rest.put(Routes.applicationGuildCommands(this.user!.id, guildId), {
         body: updatedCommands,
       });
-
     } catch (e) {
       this.logger?.error(
         `Failed to unregister guild commands for ${guildId}: ${e}`
@@ -212,7 +218,7 @@ export class DiscordClient extends Client {
         body: updatedCommands,
       });
 
-      return updatedCommands
+      return updatedCommands;
     } catch (e) {
       this.logger?.error(`Failed to unregister global commands: ${e}`);
     }

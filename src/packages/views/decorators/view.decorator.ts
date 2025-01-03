@@ -1,6 +1,7 @@
 import { IModule } from "@/packages/client";
+import { BaseCollector } from "@/packages/client/collectors/base.collector";
 import { ViewMetadataKeys } from "@/shared";
-import { ActionRowBuilder } from "discord.js";
+import { ActionRowBuilder, Base } from "discord.js";
 
 export interface IViewOptions {
   /**
@@ -23,6 +24,10 @@ export interface IViewOptions {
    * When rows will not available
    */
   ttl?: number;
+  /**
+   * The position of your component
+   */
+  row?: number;
 }
 
 export interface IViewComponentMetadata {
@@ -40,14 +45,18 @@ export interface IViewConstructorResponse {
  */
 export const View = (options: IViewOptions) => {
   return <T extends { new (...args: any[]): {} }>(BaseClass: T) => {
+    Reflect.defineMetadata(ViewMetadataKeys.VIEW, options, BaseClass);
+    Reflect.defineMetadata(
+      ViewMetadataKeys.VIEW_COMPONENTS,
+      BaseCollector.getModuleMethods(BaseClass),
+      BaseClass
+    );
+    Reflect.defineMetadata(ViewMetadataKeys.VIEW_CLASS, BaseClass, BaseClass);
     return class extends BaseClass {
+      rows: ActionRowBuilder[];
       constructor(...args: any[]) {
         super(...args);
-        Reflect.defineMetadata(ViewMetadataKeys.VIEW, options, BaseClass);
-
-        return {
-          rows: [],
-        };
+        this.rows = [];
       }
     };
   };

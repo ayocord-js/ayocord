@@ -18,6 +18,8 @@ import { ISubCommandOptions } from "@/packages/interactions/decorators/sub-comma
 import { ConfigUtility } from "@/packages/utils";
 import { DiscordModule } from "@/packages/modules";
 import { IHandler } from "./handler.interface";
+import { IViewOptions } from "@/packages/views";
+import { IBaseViewComponent } from "@/packages/views/types";
 
 export interface IModule {
   isEnabled: boolean;
@@ -61,6 +63,10 @@ export interface ISubCommandEntity extends IDiscordEntity {
   options: ISubCommandOptions;
 }
 
+export interface IViewEntity extends IDiscordEntity {
+  options: { view: IViewOptions; component: IBaseViewComponent<any> };
+}
+
 export type ModuleCollection = Collection<string, IModule>;
 export type SlashCommandCollection = Collection<string, ISlashCommandEntity>;
 export type EventCollection = Collection<string, IEventEntity>;
@@ -68,6 +74,7 @@ export type AutoCompleteCollection = Collection<string, IAutoCompleteEntity>;
 export type ComponentCollection = Collection<string, IComponentEntity>;
 export type TextCommandCollection = Collection<string, ITextCommandEntity>;
 export type SubCommandCollection = Collection<string, ISubCommandEntity>;
+export type ViewCollection = Collection<string, IViewEntity>;
 
 export interface ISynchronizeOptions {
   /**

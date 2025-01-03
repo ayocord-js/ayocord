@@ -24,6 +24,12 @@ export enum ViewMetadataKeys {
    */
   VIEW = "view",
   /**
+   * For set methods
+   */
+  VIEW_COMPONENTS = "viewcomponents",
+
+  VIEW_CLASS = "viewclass",
+  /**
    * COMPONENTS
    */
   BUTTON = "button",

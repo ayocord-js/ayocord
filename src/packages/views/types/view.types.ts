@@ -7,14 +7,14 @@ import {
   UserSelectMenuBuilder,
 } from "discord.js";
 
-export interface IViewComponentOptions<T> {
-  useAsync: () => T | Promise<T>;
-  options: T;
-}
 
 export interface IBaseViewComponent<T>
   extends Omit<IComponentOptions, "customId"> {
   builder: T;
+  /**
+   * The position of your component
+   */
+  row?: number;
 }
 
 export interface IButtonOptions extends IBaseViewComponent<ButtonBuilder> {}
@@ -25,4 +25,4 @@ export interface IChannelSelectOptions
 export interface IStringSelectOptions
   extends IBaseViewComponent<StringSelectMenuBuilder> {}
 export interface IUserSelectOptions
-  extends IViewComponentOptions<UserSelectMenuBuilder> {}
+  extends IBaseViewComponent<UserSelectMenuBuilder> {}

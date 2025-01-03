@@ -11,7 +11,7 @@ import {
 import { DiscordClient } from "../client";
 import { CustomIdParser } from "@/packages/utils/parsers/custom-id.parser";
 import { IHandler } from "../types/handler.interface";
-import { ISlashCommandEntity } from "../types";
+import { ISlashCommandEntity, IViewEntity } from "../types";
 import { BaseHandler } from "./abstract.handler";
 
 /**
@@ -130,6 +130,34 @@ export class InteractionHandler extends BaseHandler implements IHandler {
     return `${commandName}${
       subCommandGroupName.length ? "_" + subCommandGroupName : ""
     }${subCommandName.length ? "+" + subCommandName : ""}`;
+  }
+
+  protected async handleView(
+    interaction:
+      | ButtonInteraction
+      | ModalSubmitInteraction
+      | AnySelectMenuInteraction
+  ) {
+    const args = CustomIdParser.parseArguments(interaction.customId);
+    const componentFromCache = this.client.views.get(args[0]);
+    if (!componentFromCache) return;
+    const { options, module, executor } = componentFromCache;
+    const { view, component } = options;
+    const { isDevOnly, isAuthorOnly, ttl } = component;
+    if (
+      (view.isDev || module.isDev || isDevOnly) &&
+      !this.client.devs?.includes(interaction.user.id)
+    )
+      return;
+    if (isAuthorOnly && interaction.user.id !== interaction.message?.author.id)
+      return;
+    const createdAt = interaction.message?.createdTimestamp;
+    if (createdAt && ttl && createdAt + ttl <= Date.now()) return;
+    try {
+      await executor(interaction, args.slice(0, -1));
+    } catch (e) {
+      this.client.logger?.error(e);
+    }
   }
 
   /**
