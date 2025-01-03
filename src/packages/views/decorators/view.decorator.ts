@@ -1,5 +1,6 @@
 import { IModule } from "@/packages/client";
 import { BaseCollector } from "@/packages/client/collectors/base.collector";
+import { ViewDiscordCollector } from "@/packages/client/collectors/view.collector";
 import { ViewMetadataKeys } from "@/shared";
 import { ActionRowBuilder, Base } from "discord.js";
 
@@ -24,10 +25,6 @@ export interface IViewOptions {
    * When rows will not available
    */
   ttl?: number;
-  /**
-   * The position of your component
-   */
-  row?: number;
 }
 
 export interface IViewComponentMetadata {
@@ -56,7 +53,7 @@ export const View = (options: IViewOptions) => {
       rows: ActionRowBuilder[];
       constructor(...args: any[]) {
         super(...args);
-        this.rows = [];
+        this.rows = ViewDiscordCollector.collectRows(BaseClass);
       }
     };
   };

@@ -54,6 +54,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
       interaction.isModalSubmit()
     ) {
       await this.handleComponents(interaction);
+      await this.handleView(interaction);
     }
   }
 

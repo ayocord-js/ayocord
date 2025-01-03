@@ -5,10 +5,9 @@ import {
   IRoleSelectOptions,
   IStringSelectOptions,
   IUserSelectOptions,
-  IViewComponentOptions,
 } from "../types";
 
-export const Button = (options: IViewComponentOptions<IButtonOptions>) => {
+export const Button = (options: IButtonOptions) => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     Reflect.defineMetadata(
       ViewMetadataKeys.BUTTON,
@@ -21,7 +20,7 @@ export const Button = (options: IViewComponentOptions<IButtonOptions>) => {
 };
 
 export const StringSelect = (
-  options: IViewComponentOptions<IStringSelectOptions>
+  options: IStringSelectOptions
 ) => {
   return (
     target: Object,
@@ -39,7 +38,7 @@ export const StringSelect = (
 };
 
 export const RoleSelect = (
-  options: IViewComponentOptions<IRoleSelectOptions>
+  options: IRoleSelectOptions
 ) => {
   return (
     target: Object,
@@ -57,7 +56,7 @@ export const RoleSelect = (
 };
 
 export const ChannelSelect = (
-  options: IViewComponentOptions<IChannelSelectOptions>
+  options: IChannelSelectOptions
 ) => {
   return (
     target: Object,
@@ -75,7 +74,7 @@ export const ChannelSelect = (
 };
 
 export const UserSelect = (
-  options: IViewComponentOptions<IUserSelectOptions>
+  options: IUserSelectOptions
 ) => {
   return (
     target: Object,

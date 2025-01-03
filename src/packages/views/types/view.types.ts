@@ -7,6 +7,13 @@ import {
   UserSelectMenuBuilder,
 } from "discord.js";
 
+export enum RowPosition {
+  First = 0,
+  Second = 1,
+  Third = 2,
+  Fouth = 3,
+  Fifth = 4,
+}
 
 export interface IBaseViewComponent<T>
   extends Omit<IComponentOptions, "customId"> {
@@ -14,7 +21,7 @@ export interface IBaseViewComponent<T>
   /**
    * The position of your component
    */
-  row?: number;
+  row: RowPosition;
 }
 
 export interface IButtonOptions extends IBaseViewComponent<ButtonBuilder> {}

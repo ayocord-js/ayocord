@@ -15,35 +15,35 @@ export class ViewDiscordCollector extends BaseCollector implements ICollector {
   /**
    * Using in View decorator for collecting all decorator functions and transform them to rows
    */
-  public static async collectRows(view: any) {
+  public static collectRows(view: any) {
     const methods = BaseCollector.getModuleMethods(view);
     const rows = [];
     for (const method of methods) {
-      for (const key in ViewMetadataKeys) {
+      for (const key of Object.values(ViewMetadataKeys)) {
         const methodMetadata = Reflect.getMetadata(
           key,
-          view,
+          view.prototype,
           method.key
         ) as IBaseViewComponent<ButtonBuilder>;
-        const options = methodMetadata;
-        const resolvedOptions =
-          typeof options === "function"
-            ? await (options as Function)()
-            : options;
+        if (!methodMetadata) continue
+        const { row: position, builder } = methodMetadata;
         if (key === ViewMetadataKeys.BUTTON) {
-          const row = new ActionRowBuilder().addComponents(
-            resolvedOptions.builder
-          );
-          rows.push(row);
+          const row = new ActionRowBuilder().addComponents(builder);
+          const existed = rows[position];
+          if (existed && existed.row.components.length + 1 <= 5) {
+            existed.row.addComponents(builder);
+          }
+          rows.push({ row, position });
         } else {
-          const row = new ActionRowBuilder().addComponents(
-            resolvedOptions.builder
-          );
-          rows.push(row);
+          const row = new ActionRowBuilder().addComponents(builder);
+          rows.push({ row, position });
         }
       }
     }
-    return rows.slice(0, 5);
+    return rows
+      .sort((a, b) => a.position + b.position)
+      .map((row) => row.row)
+      .slice(0, 5);
   }
 
   public async collect(): Promise<void> {
