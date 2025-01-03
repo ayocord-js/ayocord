@@ -93,7 +93,7 @@ One class = one module (cog in python sleng), however I hate python and love Typ
 
 > Use this decorators to creating action rows with callback
 
-- [ ] Views
+- [x] Views
 - [x] Button
 - [x] StringSelect
 - [x] RoleSelect
