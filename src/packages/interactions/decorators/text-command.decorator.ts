@@ -1,4 +1,4 @@
-import { MetadataKeys } from "@/shared";
+import { ModuleMetadataKeys } from "@/shared";
 
 /**
  * Enum representing the types of arguments that can be fetched from a command.
@@ -70,7 +70,7 @@ export const TextCommand = (options: ITextCommandOptions) => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     // Method decorator logic
     Reflect.defineMetadata(
-      MetadataKeys.TEXT_COMMAND,
+      ModuleMetadataKeys.TEXT_COMMAND,
       options,
       target,
       propertyKey

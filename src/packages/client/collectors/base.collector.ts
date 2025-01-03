@@ -1,0 +1,71 @@
+import { glob } from "glob";
+import path from "path";
+
+export interface IDecoratorMetadataKeys {
+  key: string; // The name of the method
+  method: unknown; // The actual method reference
+}
+
+export interface ICollector {
+  collect(): void | Promise<void>;
+}
+
+export class BaseCollector {
+  /**
+   * Retrieves methods from a module class that are decorated with metadata.
+   * @param module The module class to analyze.
+   * @returns An array of methods and their associated metadata keys.
+   */
+  protected getModuleMethods(module: any): IDecoratorMetadataKeys[] {
+    return Object.getOwnPropertyNames(module.prototype)
+      .filter((key) => key !== "constructor")
+      .map((key) => ({
+        key,
+        method: module.prototype[key],
+      }));
+  }
+
+  protected async getAllProjectModules() {
+    const extension = require.main?.filename.endsWith(".js") ? "js" : "ts";
+    const modules: any[] = [];
+    const files = await glob(`**/*.${extension}`, {
+      ignore: ["**/node_modules/**"],
+      cwd: process.cwd(),
+    });
+    await Promise.allSettled(
+      files.map(async (file) => {
+        const absolutePath = path.resolve(process.cwd(), file);
+        try {
+          const module = await import(absolutePath);
+          modules.push(module);
+        } catch {}
+      })
+    );
+    return modules;
+  }
+
+  /**
+   * Retrieves metadata associated with a specific key.
+   * @param target The target object (class or method).
+   * @param key The metadata key to retrieve.
+   * @returns The metadata value or null if not found.
+   */
+  protected getMetadata<T>(
+    target: Object,
+    metadataKey: string,
+    propertyKey?: string | symbol
+  ): T | null {
+    if (!target || !metadataKey) {
+      throw new Error("Target and metadataKey are required parameters.");
+    }
+
+    if (propertyKey !== undefined) {
+      return Reflect.getMetadata(metadataKey, target, propertyKey) || null;
+    }
+
+    return Reflect.getMetadata(metadataKey, target) || null;
+  }
+  protected isValidClass(target: any, metadataKey: string) {
+    return Boolean(Reflect.getMetadata(metadataKey, target));
+  }
+}

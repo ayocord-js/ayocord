@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, Snowflake } from "discord.js";
-import { MetadataKeys } from "@/shared";
+import { ModuleMetadataKeys } from "@/shared";
 import { DiscordClient } from "@/packages/client";
 
 export interface ISlashCommandSynchronizeOptions {
@@ -67,7 +67,7 @@ export const SlashCommand = (options: ISlashCommandOptions) => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     // Method decorator logic
     Reflect.defineMetadata(
-      MetadataKeys.SLASH_COMMAND,
+      ModuleMetadataKeys.SLASH_COMMAND,
       options,
       target,
       propertyKey

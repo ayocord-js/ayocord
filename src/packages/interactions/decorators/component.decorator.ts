@@ -3,7 +3,7 @@ import {
   ButtonInteraction,
   ModalSubmitInteraction,
 } from "discord.js";
-import { MetadataKeys } from "../../../shared/types/metadata-keys.enum";
+import { ModuleMetadataKeys } from "../../../shared/types/metadata-keys.enum";
 import { CustomIdParser } from "@/packages/utils/parsers/custom-id.parser";
 import { DiscordClient } from "@/packages/client";
 
@@ -52,7 +52,7 @@ export const Component = (options: IComponentOptions) => {
     // Method decorator logic
     const originalMethod = descriptor.value;
     Reflect.defineMetadata(
-      MetadataKeys.COMPONENT,
+      ModuleMetadataKeys.COMPONENT,
       options,
       target,
       propertyKey

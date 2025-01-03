@@ -1,5 +1,5 @@
 import { DiscordClient, IModule } from "@/packages/client";
-import { MetadataKeys } from "@/shared";
+import { ModuleMetadataKeys } from "@/shared";
 import { CommandUtility } from "@/packages/slash-commands";
 import { DiscordModule } from "../types";
 
@@ -15,7 +15,7 @@ export class ModuleUtility {
     const moduleName =
       typeof module === "string"
         ? module
-        : Reflect.getMetadata(MetadataKeys.MODULE, module.prototype)?.name;
+        : Reflect.getMetadata(ModuleMetadataKeys.MODULE, module.prototype)?.name;
 
     if (!moduleName) return null;
     return this.client.modules.get(moduleName) || null;

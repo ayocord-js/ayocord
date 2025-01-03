@@ -1,5 +1,5 @@
 import { Events } from "discord.js";
-import { MetadataKeys } from "../../../shared/types/metadata-keys.enum";
+import { ModuleMetadataKeys } from "../../../shared/types/metadata-keys.enum";
 
 export interface IEventOptions {
   /**
@@ -34,7 +34,7 @@ export const Event = (options: IEventOptions) => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     // Method decorator logic
     const originalMethod = descriptor.value;
-    Reflect.defineMetadata(MetadataKeys.EVENT, options, target, propertyKey);
+    Reflect.defineMetadata(ModuleMetadataKeys.EVENT, options, target, propertyKey);
     descriptor.value = async function (...args: unknown[]) {
       try {
         const result = await originalMethod.apply(this, args);

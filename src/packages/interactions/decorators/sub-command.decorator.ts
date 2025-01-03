@@ -1,4 +1,4 @@
-import { MetadataKeys } from "@/shared";
+import { ModuleMetadataKeys } from "@/shared";
 
 export interface ISubCommandOptions {
   /**
@@ -12,7 +12,7 @@ export interface ISubCommandOptions {
 export const SubCommand = (options: ISubCommandOptions) => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     Reflect.defineMetadata(
-      MetadataKeys.SUB_COMMAND,
+      ModuleMetadataKeys.SUB_COMMAND,
       target,
       options,
       propertyKey

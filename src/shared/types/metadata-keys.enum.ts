@@ -1,7 +1,7 @@
 /**
  * Metadata keys for interact with decorators
  */
-export enum MetadataKeys {
+export enum ModuleMetadataKeys {
   /**
    * Container module
    */
@@ -16,15 +16,20 @@ export enum MetadataKeys {
   TEXT_COMMAND = "textcommands",
   AUTO_COMPLETE = "autocomplete",
   SUB_COMMAND = "subcommand",
+}
 
+export enum ViewMetadataKeys {
   /**
-   * View module
+   * VIEW MAIN
    */
-  View = "view",
-  Button = "button",
-  StringSelect = "select",
-  RoleSelect = "roleselect",
-  ChannelSelect = "channelselect",
-  UserSelect = "channelselect",
-  Modal = "modal",
+  VIEW = "view",
+  /**
+   * COMPONENTS
+   */
+  BUTTON = "button",
+  STRINGSELECT = "select",
+  ROLESELECT = "roleselect",
+  CHANNELSELECT = "channelselect",
+  USERSELECT = "channelselect",
+  MODAL = "modal",
 }

@@ -1,7 +1,16 @@
-import { MetadataKeys } from "@/shared";
+import { IModule } from "@/packages/client";
+import { ViewMetadataKeys } from "@/shared";
+import { ActionRowBuilder } from "discord.js";
 
 export interface IViewOptions {
-  name: string;
+  /**
+   * Instance of your module
+   *
+   * Is required option
+   *
+   * Needs for handling your components in view as basic component and have opportunity to enable/disable components using module!
+   */
+  module: Function;
   /**
    * If true interact with view can only do developers
    */
@@ -10,6 +19,19 @@ export interface IViewOptions {
    * If true interact with view can only do author
    */
   isAuthorOnly?: boolean;
+  /**
+   * When rows will not available
+   */
+  ttl?: number;
+}
+
+export interface IViewComponentMetadata {
+  customId: string;
+  executor: Function;
+}
+
+export interface IViewConstructorResponse {
+  rows: ActionRowBuilder[];
 }
 
 /**
@@ -21,8 +43,11 @@ export const View = (options: IViewOptions) => {
     return class extends BaseClass {
       constructor(...args: any[]) {
         super(...args);
-        Reflect.defineMetadata(MetadataKeys.View, options, BaseClass);
-        return;
+        Reflect.defineMetadata(ViewMetadataKeys.VIEW, options, BaseClass);
+
+        return {
+          rows: [],
+        };
       }
     };
   };

@@ -95,7 +95,6 @@ One class = one module (cog in python sleng), however I hate python and love Typ
 
 - [ ] Views
 - [ ] Button
-- [ ] Modal
 - [ ] StringSelect
 - [ ] RoleSelect
 - [ ] ChannelSelect

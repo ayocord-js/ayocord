@@ -1,4 +1,4 @@
-import { MetadataKeys } from "@/shared/types/metadata-keys.enum";
+import { ModuleMetadataKeys } from "@/shared/types/metadata-keys.enum";
 
 
 // Интерфейс для параметров, передаваемых в декоратор
@@ -17,6 +17,6 @@ export const Module = (options: IModuleOptions) => {
     /**
      * Save class metadata
      */
-    Reflect.defineMetadata(MetadataKeys.MODULE, options, target);
+    Reflect.defineMetadata(ModuleMetadataKeys.MODULE, options, target);
   };
 };
