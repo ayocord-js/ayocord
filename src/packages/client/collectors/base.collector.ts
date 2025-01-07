@@ -55,9 +55,6 @@ export class BaseCollector {
     metadataKey: string,
     propertyKey?: string | symbol
   ): T | null {
-    if (!target || !metadataKey) {
-      throw new Error("Target and metadataKey are required parameters.");
-    }
 
     if (propertyKey !== undefined) {
       return Reflect.getMetadata(metadataKey, target, propertyKey) || null;
