@@ -66,7 +66,11 @@ export class BaseCollector {
     return Reflect.getMetadata(metadataKey, target) || null;
   }
   protected isValidClass(target: any, metadataKey: string) {
-    const isValid = Reflect.getMetadata(metadataKey, target)
-    return !!isValid;
+    try {
+      const isValid = Reflect.getMetadata(metadataKey, target);
+      return !!isValid;
+    } catch {
+      return false;
+    }
   }
 }
