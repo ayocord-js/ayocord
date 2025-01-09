@@ -13,7 +13,7 @@ export class DiscordFactory {
   /**
    * This method connect all handlers for client
    */
-  private static async connectHandlers(client: DiscordClient) {
+  private static connectHandlers(client: DiscordClient) {
     const { interaction, event, textCommand } = client.handlers;
     const handlers = [interaction, textCommand, event];
     handlers.forEach((Handler: any) => {
@@ -35,8 +35,8 @@ export class DiscordFactory {
     }
   }
 
-  private static connectViewCollector(client: DiscordClient) {
-    return new ViewDiscordCollector(client).collect();
+  private static async connectViewCollector(client: DiscordClient) {
+    return await new ViewDiscordCollector(client).collect();
   }
 
   /**
@@ -51,44 +51,44 @@ export class DiscordFactory {
    *   synchronize: { global: true, guild: true },
    * });
    */
-  public static create(options: IDiscordClientOptions) {
+  public static async create(options: IDiscordClientOptions) {
     // Create a new instance of DiscordClient
     const client = new DiscordClient({ ...options });
 
     // Connect collector
     try {
-      this.connectCollectors(client, []);
+      await this.connectCollectors(client, []);
     } catch (e) {
       client.logger?.error(e);
     }
     return client;
   }
 
-  private static connectCollectors(
+  private static async connectCollectors(
     client: DiscordClient,
     modules: DiscordModule[]
   ) {
     try {
-      this.connectModuleCollector(client, modules);
+      await this.connectModuleCollector(client, modules);
     } catch (e) {
       client.logger?.error(`Error while connecting module collector`);
     }
     try {
-      this.connectViewCollector(client);
+      await this.connectViewCollector(client);
     } catch {
       client.logger?.error(`Error while connecting view collector`);
     }
     try {
-      this.connectHandlers(client);
+      await this.connectHandlers(client);
     } catch (e) {
       client.logger?.error(`Error while connecting handler`);
     }
   }
 
-  public static createMultiToken(options: IMultiTokenOptions) {
+  public static async createMultiToken(options: IMultiTokenOptions) {
     const clients: DiscordClient[] = [];
     const { bots, DEFAULT } = options;
-    Object.keys(bots).forEach((key) => {
+    Object.keys(bots).forEach(async (key) => {
       const bot = bots[key];
       const { options, modules: botModules } = bot;
       const intents = [
@@ -106,7 +106,7 @@ export class DiscordFactory {
         ...(botModules || []),
       ];
       try {
-        this.connectCollectors(client, modules);
+        await this.connectCollectors(client, modules);
       } catch (e) {
         client.logger?.error(e);
       }
