@@ -116,4 +116,9 @@ export class DiscordFactory {
     });
     return clients;
   }
+
+  public static async createFromInstance(client: DiscordClient) {
+    await this.connectCollectors(client, []);
+    return client;
+  }
 }
