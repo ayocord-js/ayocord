@@ -1,22 +1,24 @@
 import { config, DotenvParseOutput } from "dotenv";
 
 export class ConfigUtility {
-  private config: DotenvParseOutput;
+  private config: DotenvParseOutput | null = null;
+
   constructor() {
     const { error, parsed } = config();
     if (error) {
-      throw new Error(`File .env not found`);
+      console.error(error);
     }
-    if (!parsed) {
-      throw new Error(`File .env is empty`);
+    if (parsed) {
+      this.config = parsed;
     }
-    this.config = parsed;
   }
 
-  get(key: string, _default?: any): string | never {
+  get(key: string, _default?: any): string | null {
+    if (!this.config) return null;
     const res = this.config[key];
     if (!res && !_default) {
-      throw new Error(`This key does not exists`);
+      console.error(`Key ${key} does not exists`);
+      return null;
     }
     return res ? res : _default;
   }
