@@ -126,11 +126,6 @@ export interface IDiscordClientOptions extends ClientOptions {
    */
   devs?: Snowflake[];
   /**
-   *
-   * By default instance of ConfigUtility class
-   */
-  config?: ConfigUtility;
-  /**
    * Would you like to use custom logger or our ayologger - your choice
    */
   logger?: InstanceType<typeof Logger> | Logger; // Инстанс или объект наследника

@@ -53,7 +53,6 @@ export class DiscordClient extends Client {
   public prefix?: string;
   public synchronize?: ISynchronizeOptions;
   public token: string | null;
-  public config: ConfigUtility;
   public collector?: IDiscordClientCollector;
   public handlers: IDiscordClientHandler;
 
@@ -71,9 +70,8 @@ export class DiscordClient extends Client {
     this.components = new Collection();
     this.textCommands = new Collection();
     this.subCommands = new Collection();
-    this.views = new Collection()
+    this.views = new Collection();
 
-    this.config = options.config || new ConfigUtility();
     this.handlers = options.handlers
       ? {
           ...handlers,
@@ -88,7 +86,7 @@ export class DiscordClient extends Client {
     this.logger = options.logger ?? new Logger();
     this.prefix = options.prefix;
     this.synchronize = options.synchronize ?? { global: true, guild: true };
-    this.token = options.token || this.config.get("DISCORD_TOKEN");
+    this.token = options.token ?? null;
   }
 
   /**
@@ -96,7 +94,7 @@ export class DiscordClient extends Client {
    * @param commands - An array of SlashCommandBuilder instances to register.
    */
   async registerGlobalCommands(commands: SlashCommandBuilder[]) {
-    const rest = new REST({ version: "10" }).setToken(this.token || '');
+    const rest = new REST({ version: "10" }).setToken(this.token || "");
     try {
       await rest.put(Routes.applicationCommands(this.user!.id), {
         body: commands,
@@ -118,7 +116,7 @@ export class DiscordClient extends Client {
     guildId: Snowflake,
     commands: SlashCommandBuilder[]
   ) {
-    const rest = new REST({ version: "10" }).setToken(this.token || '');
+    const rest = new REST({ version: "10" }).setToken(this.token || "");
     try {
       await rest.put(Routes.applicationGuildCommands(this.user!.id, guildId), {
         body: commands,
@@ -136,7 +134,7 @@ export class DiscordClient extends Client {
    */
   public async login(token?: string): Promise<string> {
     try {
-      await super.login(token || this.token || '');
+      await super.login(token || this.token || "");
       if (token) {
         this.token = token;
       }
@@ -169,7 +167,7 @@ export class DiscordClient extends Client {
     guildId: Snowflake,
     commands: SlashCommandBuilder[]
   ) {
-    const rest = new REST({ version: "10" }).setToken(this.token || '');
+    const rest = new REST({ version: "10" }).setToken(this.token || "");
 
     try {
       // Fetch existing commands from the guild
@@ -197,7 +195,7 @@ export class DiscordClient extends Client {
   }
 
   async unRegisterGlobalCommands(commands: SlashCommandBuilder[]) {
-    const rest = new REST({ version: "10" }).setToken(this.token || '');
+    const rest = new REST({ version: "10" }).setToken(this.token || "");
 
     try {
       // Fetch existing commands from the guild
