@@ -1,6 +1,6 @@
-import { IDiscordClientOptions } from "../types/client.types";
+import { IDiscordClientOptions } from "@/packages";
 import { DiscordClient } from "../client";
-import { AutoDiscordCollector, ModuleDiscordCollector } from "../collectors";
+import { AutoDiscordCollector, ModuleDiscordCollector } from "@/packages";
 import { IMultiTokenOptions } from "../types";
 import { DiscordModule } from "@/packages/modules";
 import { MultiTokenBotsUitility } from "../utils";
@@ -14,7 +14,7 @@ export class DiscordFactory {
    * This method connect all handlers for client
    */
   private static connectHandlers(client: DiscordClient) {
-    const { interaction, event, textCommand } = client.handlers;
+    const { interaction, event, textCommand } = client.handlers!;
     const handlers = [interaction, textCommand, event];
     handlers.forEach((Handler: any) => {
       new Handler(client).connect();
@@ -79,7 +79,7 @@ export class DiscordFactory {
       client.logger?.error(`Error while connecting view collector`);
     }
     try {
-      await this.connectHandlers(client);
+      this.connectHandlers(client);
     } catch (e) {
       client.logger?.error(`Error while connecting handler`);
     }
@@ -87,22 +87,22 @@ export class DiscordFactory {
 
   public static async createMultiToken(options: IMultiTokenOptions) {
     const clients: DiscordClient[] = [];
-    const { bots, DEFAULT } = options;
-    Object.keys(bots).forEach(async (key) => {
+    const { bots, defaultBotOptions } = options;
+    for (const key of Object.keys(bots)) {
       const bot = bots[key];
       const { options, modules: botModules } = bot;
       const intents = [
         // @ts-ignore
-        ...(DEFAULT?.options.intents || []),
+        ...(defaultBotOptions?.options.intents || []),
         ...(options.intents || []),
       ];
       const client = new DiscordClient({
-        ...DEFAULT?.options,
+        ...defaultBotOptions?.options,
         ...options,
         intents,
       });
       const modules: DiscordModule[] = [
-        ...(DEFAULT?.modules || []),
+        ...(defaultBotOptions?.modules || []),
         ...(botModules || []),
       ];
       try {
@@ -113,7 +113,7 @@ export class DiscordFactory {
       // Set bot to cache
       MultiTokenBotsUitility.set(key.toLowerCase(), client);
       clients.push(client);
-    });
+    }
     return clients;
   }
 

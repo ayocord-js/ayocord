@@ -39,7 +39,7 @@ export class JobUtils {
    * @param id - The key or function used to identify the job.
    */
   static delete(id: TJobKey | Function): void {
-    const job = this.cache.get(this.getId(id));
+    const job = this.get(this.getId(id));
     if (job) {
       if (typeof job === "object" && "cancel" in job) {
         job.cancel(); // Stop a node-schedule job

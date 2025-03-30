@@ -1,4 +1,5 @@
 import {
+  ApplicationCommand,
   Client,
   Collection,
   REST,
@@ -20,14 +21,10 @@ import {
   IDiscordClientCollector,
   IDiscordClientHandler,
   ViewCollection,
-} from "./types/client.types";
-import { ConfigUtility } from "../utils";
-import { CommandUtility } from "../slash-commands";
+} from "@/packages";
+import { CommandUtility } from "@/packages";
 import {
-  EventHandler,
   handlers,
-  InteractionHandler,
-  TextCommandHandler,
 } from "./handlers";
 
 /**
@@ -35,26 +32,30 @@ import {
  * Includes support for modular architecture, command collections, and enhanced logging.
  */
 export class DiscordClient extends Client {
+  
   public modules: ModuleCollection;
   public slashCommands: SlashCommandCollection;
   public subCommands: SubCommandCollection;
   public events: EventCollection;
   public components: ComponentCollection;
+  public autoComplete: AutoCompleteCollection;
+  public textCommands: TextCommandCollection;
   /**
    * Same components but wrapped on view decorator
    */
   public views: ViewCollection;
-  public autoComplete: AutoCompleteCollection;
-  public textCommands: TextCommandCollection;
+  
+  public enabled: boolean
   public applicationName?: string;
   public version?: string;
   public devs?: Snowflake[];
   public logger?: InstanceType<typeof Logger> | Logger;
   public prefix?: string;
-  public synchronize?: ISynchronizeOptions;
   public token: string | null;
+  public synchronize?: ISynchronizeOptions;
   public collector?: IDiscordClientCollector;
-  public handlers: IDiscordClientHandler;
+  public handlers?: IDiscordClientHandler;
+  
 
   /**
    * Initializes a new instance of DiscordClient.
@@ -71,7 +72,8 @@ export class DiscordClient extends Client {
     this.textCommands = new Collection();
     this.subCommands = new Collection();
     this.views = new Collection();
-
+    this.enabled = options.enabled === undefined ? true : options.enabled;
+    
     this.handlers = options.handlers
       ? {
           ...handlers,
@@ -133,6 +135,9 @@ export class DiscordClient extends Client {
    * Logs the client in and synchronizes commands if enabled.
    */
   public async login(token?: string): Promise<string> {
+    
+    if (!this.enabled) return "fail"
+    
     try {
       await super.login(token || this.token || "");
       if (token) {
@@ -151,7 +156,7 @@ export class DiscordClient extends Client {
 
     return "success";
   }
-
+  
   private async synchronizeCommands() {
     const commands = await CommandUtility.getCommands(this, this.slashCommands);
     await CommandUtility.synchronize(this, commands, true);
@@ -171,9 +176,9 @@ export class DiscordClient extends Client {
 
     try {
       // Fetch existing commands from the guild
-      const existingCommands: any[] = (await rest.get(
+      const existingCommands: ApplicationCommand[] = (await rest.get(
         Routes.applicationGuildCommands(this.user!.id, guildId)
-      )) as any[];
+      )) as ApplicationCommand[];
 
       // Extract command names from the provided builders
       const commandNamesToRemove = commands.map((command) => command.name);

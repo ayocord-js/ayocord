@@ -59,7 +59,7 @@ export class ViewDiscordCollector extends BaseCollector implements ICollector {
       })
     );
   }
-
+  
   private async processView(module: any) {
     const metadata = this.getMetadata<IViewOptions>(
       module,
@@ -88,12 +88,12 @@ export class ViewDiscordCollector extends BaseCollector implements ICollector {
         );
         if (!methodMetadata) continue;
         const component = methodMetadata;
-        const customId = (component.builder?.toJSON() as any)?.custom_id;
+        const customId = (component.builder?.toJSON())?.custom_id;
         const boundMethod = method.method.bind(module);
         this.client.views.set(customId, {
           options: {
             view: metadata,
-            component: methodMetadata as any,
+            component: methodMetadata,
           },
           module: metadata.module,
           executor: boundMethod,

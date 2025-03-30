@@ -110,7 +110,7 @@ export interface IDiscordClientOptions extends ClientOptions {
   /**
    * Discord Bot token
    */
-
+  
   token?: string;
   /**
    * How you call your ship then he swim
@@ -164,9 +164,16 @@ export interface IDiscordClientOptions extends ClientOptions {
 
   collector?: IDiscordClientCollector;
   /**
-   * Your custom handlers impemention
+   * Your custom handlers implementation
    */
   handlers?: IDiscordClientHandler;
+  
+  /**
+   * Needs when you want to enable or disable your bot
+   *
+   * For example, this option can be used for development bot or you want check if this bot online
+   */
+  enabled: boolean
 }
 
 export type TEntity =
