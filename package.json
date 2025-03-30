@@ -1,18 +1,32 @@
 {
   "name": "ayocord",
   "description": "This a wrapper under the discord.js. It simplify development",
-  "version": "1.0.0",
-  "main": "index.js",
+  "version": "1.5.2",
+  "main": "dist/index.js",
   "license": "MIT",
-  "peerDependencies": {},
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "npx tsc --build && npx tsc-alias"
+  },
   "devDependencies": {
+    "@types/dotenv": "^8.2.3",
+    "@types/glob": "^8.1.0",
     "@types/node": "^22.10.2",
+    "@types/node-schedule": "^2.1.7",
     "discord.js": "^14.16.3",
+    "sass": "^1.83.0",
     "tsup": "^8.3.5",
+    "typedoc": "^0.27.6",
     "typescript": "^5.7.2"
   },
   "dependencies": {
-    "ayologger": "^0.0.5",
-    "glob": "^11.0.0"
-  }
+    "ayologger": "^0.0.11",
+    "dotenv": "^16.4.7",
+    "glob": "^11.0.0",
+    "node-schedule": "^2.1.1",
+    "reflect-metadata": "^0.2.2"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
