@@ -1,5 +1,4 @@
-import { DiscordModule } from "@/packages/modules";
-import { IDiscordClientOptions } from "./client.types";
+import { IDiscordClientOptions } from "@/packages";
 
 export interface IMultiTokenBot {
   options: IDiscordClientOptions;
@@ -15,6 +14,6 @@ export interface IMultiTokenOptions {
   /**
    * Here we recomend you define your default options which will inherit in other bots
    */
-  DEFAULT?: IMultiTokenBot;
+  defaultBotOptions?: IMultiTokenBot;
   bots: Record<string, IMultiTokenBot>;
 }
