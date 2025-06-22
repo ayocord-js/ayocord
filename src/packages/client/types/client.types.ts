@@ -171,7 +171,7 @@ export interface IDiscordClientOptions extends ClientOptions {
    * Needs when you want to enable or disable your bot
    * For example, this option can be used for development bot or you want check if this bot online
    */
-  readonly enabled: boolean
+  readonly enabled?: boolean
 }
 
 export type TEntity =
