@@ -15,9 +15,6 @@ import {
 } from "../../interactions/decorators";
 import { IModuleOptions } from "@/packages/modules/decorators";
 import { ISubCommandOptions } from "@/packages/interactions/decorators/sub-command.decorator";
-import { ConfigUtility } from "@/packages/utils";
-import { DiscordModule } from "@/packages/modules";
-import { IHandler } from "./handler.interface";
 import { IViewOptions } from "@/packages/views";
 import { IBaseViewComponent } from "@/packages/views/types";
 
@@ -106,33 +103,36 @@ export interface IDiscordClientCollector {
 
 // @ts-ignore
 export interface IDiscordClientOptions extends ClientOptions {
-  intents?: BitFieldResolvable<GatewayIntentsString, number>;
+  readonly intents?: BitFieldResolvable<GatewayIntentsString, number>;
   /**
    * Discord Bot token
    */
-  
-  token?: string;
+  readonly token?: string;
   /**
    * How you call your ship then he swim
    */
-  applicationName?: string;
+  readonly applicationName?: string;
+  /**
+   * Internal option, I recommend not touch this
+   */
+  readonly type?: ClientType
   /**
    * The version of your bot
    * You can access this property for show it your users (by default undefined)
    */
-  version?: string;
+  readonly version?: string;
   /**
    * Who created this bot
    */
-  devs?: Snowflake[];
+  readonly devs?: Snowflake[];
   /**
    * Would you like to use custom logger or our ayologger - your choice
    */
-  logger?: InstanceType<typeof Logger> | Logger; // Инстанс или объект наследника
+  readonly logger?: InstanceType<typeof Logger> | Logger; // Инстанс или объект наследника
   /**
    * Used for text commands
    */
-  prefix?: string;
+  readonly prefix?: string;
   /**
    * By default synchronize is enabled
    *
@@ -140,40 +140,38 @@ export interface IDiscordClientOptions extends ClientOptions {
    *
    * If you want to use your custom command register handler. Use client.commands collection for getting commands
    */
-  synchronize?: ISynchronizeOptions;
+  readonly synchronize?: ISynchronizeOptions;
   /**
    * Collection of modules
    */
-  modules?: ModuleCollection;
+  readonly modules?: ModuleCollection;
   /**
    * Collection of SlashCommands from modules
    */
-  slashCommands?: SlashCommandCollection;
+  readonly slashCommands?: SlashCommandCollection;
   /**
    * Collection of TextCommands
    */
-  textCommands?: TextCommandCollection;
+  readonly textCommands?: TextCommandCollection;
   /**
    * Collection of events
    */
-  events?: EventCollection;
+  readonly events?: EventCollection;
   /**
    * Collection of auto-completes
    */
-  autoComplete?: AutoCompleteCollection;
+  readonly autoComplete?: AutoCompleteCollection;
 
-  collector?: IDiscordClientCollector;
+  readonly collector?: IDiscordClientCollector;
   /**
    * Your custom handlers implementation
    */
-  handlers?: IDiscordClientHandler;
-  
+  readonly handlers?: IDiscordClientHandler;
   /**
    * Needs when you want to enable or disable your bot
-   *
    * For example, this option can be used for development bot or you want check if this bot online
    */
-  enabled: boolean
+  readonly enabled: boolean
 }
 
 export type TEntity =
@@ -182,3 +180,5 @@ export type TEntity =
   | IComponentEntity
   | ITextCommandEntity
   | ISlashCommandEntity;
+
+export type ClientType = "multitoken" | "singletoken"

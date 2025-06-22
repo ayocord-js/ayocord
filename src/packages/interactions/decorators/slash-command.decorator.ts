@@ -1,6 +1,8 @@
-import { SlashCommandBuilder, Snowflake } from "discord.js";
+import { SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder, Snowflake } from "discord.js";
 import { ModuleMetadataKeys } from "@/shared";
 import { DiscordClient } from "@/packages/client";
+
+export type AyocordSlashCommandBuilder = SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder
 
 export interface ISlashCommandSynchronizeOptions {
   /**
@@ -37,7 +39,7 @@ export interface ISlashCommandOptions {
   /**
    * The builder used to define the slash command.
    */
-  builder: SlashCommandBuilder;
+  builder: AyocordSlashCommandBuilder
 
   /**
    * Indicates whether the command is restricted to developers only.

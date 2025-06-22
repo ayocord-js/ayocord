@@ -1,10 +1,11 @@
 import { DiscordClient, SlashCommandCollection } from "@/packages/client";
+import { AyocordSlashCommandBuilder } from "@/packages/interactions";
 import { SlashCommandBuilder, Snowflake } from "discord.js";
 
-export type TGlobalCommands = SlashCommandBuilder[];
+export type TGlobalCommands = AyocordSlashCommandBuilder[];
 export type TGuildCommands = Record<
   Snowflake,
-  { commands: SlashCommandBuilder[] }
+  { commands: (AyocordSlashCommandBuilder)[] }
 >;
 
 export interface ICommands {
@@ -89,9 +90,7 @@ export class CommandUtility {
   ) {
     if (!synchronize) return { guilds: [], global: true };
 
-    if (typeof synchronize.useAsync === "function") {
-      return synchronize.useAsync(client);
-    }
+    if (typeof synchronize.useAsync === "function") return synchronize.useAsync(client);
 
     return synchronize.options;
   }

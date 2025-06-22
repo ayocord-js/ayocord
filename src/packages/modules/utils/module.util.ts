@@ -48,19 +48,20 @@ export class ModuleUtility {
     await CommandUtility.synchronize(this.client, commands, register);
   }
 
-  async moduleEnable(name: string | Function) {
+  public async moduleEnable(name: string | Function) {
     const module = this.processModule(name);
     const instance = module?.instance as DiscordModule;
-    if (instance.onEnable) {
-      return await instance.onEnable(this.client);
-    }
+
     if (!module) {
       return;
     }
 
     if (module.isEnabled) {
-
       return;
+    }
+
+    if (instance.onEnable) {
+      await instance.onEnable(this.client);
     }
 
     await Promise.all([
@@ -74,19 +75,20 @@ export class ModuleUtility {
     return true;
   }
 
-  async moduleDisable(name: string | Function) {
+  public async moduleDisable(name: string | Function) {
     const module = this.processModule(name);
     const instance = module?.instance as DiscordModule;
-    if (instance.onDisable) {
-      return await instance.onDisable(this.client);
-    }
-    if (!module) {
 
+    if (!module) {
       return;
     }
 
     if (!module.isEnabled) {
       return;
+    }
+
+    if (instance.onDisable) {
+      await instance.onDisable(this.client);
     }
 
     await Promise.all([
@@ -98,5 +100,17 @@ export class ModuleUtility {
       await this.manageCommands(module, false),
     ]);
     return true;
+  }
+
+  public getModules() {
+    return this.client.modules
+  }
+
+  public getEnabledModules() {
+    return this.getModules().filter(module => module.isEnabled)
+  }
+
+  public getDisabledModules() {
+    return this.getModules().filter(module => module.isEnabled)
   }
 }

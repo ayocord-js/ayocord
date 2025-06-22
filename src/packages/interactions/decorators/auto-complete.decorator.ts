@@ -12,7 +12,7 @@ export interface IAutoCompleteOptions {
 export const AutoComplete = (options: IAutoCompleteOptions) => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     Reflect.defineMetadata(
-      ModuleMetadataKeys.SUB_COMMAND,
+      ModuleMetadataKeys.AUTO_COMPLETE,
       options,
       target,
       propertyKey

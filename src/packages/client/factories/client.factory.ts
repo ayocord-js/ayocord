@@ -54,7 +54,12 @@ export class DiscordFactory {
   public static async create(options: IDiscordClientOptions) {
     // Create a new instance of DiscordClient
     const client = new DiscordClient({ ...options });
-
+    if (!client.enabled) {
+      if (client.type === "singletoken") {
+        throw new Error("Main client is disabled!!");
+      }
+      return;
+    }
     // Connect collector
     try {
       await this.connectCollectors(client, []);
@@ -91,6 +96,7 @@ export class DiscordFactory {
     for (const key of Object.keys(bots)) {
       const bot = bots[key];
       const { options, modules: botModules } = bot;
+      if (!options.enabled) continue
       const intents = [
         // @ts-ignore
         ...(defaultBotOptions?.options.intents || []),
@@ -99,6 +105,7 @@ export class DiscordFactory {
       const client = new DiscordClient({
         ...defaultBotOptions?.options,
         ...options,
+        type: "multitoken",
         intents,
       });
       const modules: DiscordModule[] = [

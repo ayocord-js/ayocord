@@ -4,7 +4,6 @@ import {
   Collection,
   REST,
   Routes,
-  SlashCommandBuilder,
   Snowflake,
 } from "discord.js";
 import { Logger } from "ayologger";
@@ -21,6 +20,8 @@ import {
   IDiscordClientCollector,
   IDiscordClientHandler,
   ViewCollection,
+  ClientType,
+  AyocordSlashCommandBuilder,
 } from "@/packages";
 import { CommandUtility } from "@/packages";
 import {
@@ -32,7 +33,7 @@ import {
  * Includes support for modular architecture, command collections, and enhanced logging.
  */
 export class DiscordClient extends Client {
-  
+
   public modules: ModuleCollection;
   public slashCommands: SlashCommandCollection;
   public subCommands: SubCommandCollection;
@@ -44,8 +45,9 @@ export class DiscordClient extends Client {
    * Same components but wrapped on view decorator
    */
   public views: ViewCollection;
-  
-  public enabled: boolean
+
+  public type?: ClientType
+  public enabled?: boolean
   public applicationName?: string;
   public version?: string;
   public devs?: Snowflake[];
@@ -55,7 +57,7 @@ export class DiscordClient extends Client {
   public synchronize?: ISynchronizeOptions;
   public collector?: IDiscordClientCollector;
   public handlers?: IDiscordClientHandler;
-  
+
 
   /**
    * Initializes a new instance of DiscordClient.
@@ -64,6 +66,8 @@ export class DiscordClient extends Client {
   constructor(options: IDiscordClientOptions) {
     super({ ...options, intents: options.intents ?? [] });
 
+    this.type = typeof options.type === "undefined" ? "singletoken" : options.type
+    this.enabled = typeof options.enabled === "undefined" ? true : options.enabled
     this.modules = new Collection();
     this.events = new Collection();
     this.slashCommands = new Collection();
@@ -73,12 +77,12 @@ export class DiscordClient extends Client {
     this.subCommands = new Collection();
     this.views = new Collection();
     this.enabled = options.enabled === undefined ? true : options.enabled;
-    
+
     this.handlers = options.handlers
       ? {
-          ...handlers,
-          ...options.handlers,
-        }
+        ...handlers,
+        ...options.handlers,
+      }
       : handlers;
     this.collector = options.collector;
 
@@ -95,7 +99,7 @@ export class DiscordClient extends Client {
    * Registers global slash commands for the bot.
    * @param commands - An array of SlashCommandBuilder instances to register.
    */
-  async registerGlobalCommands(commands: SlashCommandBuilder[]) {
+  async registerGlobalCommands(commands: AyocordSlashCommandBuilder[]) {
     const rest = new REST({ version: "10" }).setToken(this.token || "");
     try {
       await rest.put(Routes.applicationCommands(this.user!.id), {
@@ -116,7 +120,7 @@ export class DiscordClient extends Client {
    */
   async registerGuildCommands(
     guildId: Snowflake,
-    commands: SlashCommandBuilder[]
+    commands: AyocordSlashCommandBuilder[]
   ) {
     const rest = new REST({ version: "10" }).setToken(this.token || "");
     try {
@@ -135,14 +139,16 @@ export class DiscordClient extends Client {
    * Logs the client in and synchronizes commands if enabled.
    */
   public async login(token?: string): Promise<string> {
-    
-    if (!this.enabled) return "fail"
-    
+
+    if (!this.enabled && this.type === "singletoken") {
+      throw new Error("Main client is disabled");
+    }
+
     try {
-      await super.login(token || this.token || "");
       if (token) {
         this.token = token;
       }
+      await super.login(this.token!);
     } catch (e) {
       this.logger?.error(e);
       return "fail";
@@ -156,7 +162,7 @@ export class DiscordClient extends Client {
 
     return "success";
   }
-  
+
   private async synchronizeCommands() {
     const commands = await CommandUtility.getCommands(this, this.slashCommands);
     await CommandUtility.synchronize(this, commands, true);
@@ -170,7 +176,7 @@ export class DiscordClient extends Client {
    */
   async unRegisterGuildCommands(
     guildId: Snowflake,
-    commands: SlashCommandBuilder[]
+    commands: AyocordSlashCommandBuilder[]
   ) {
     const rest = new REST({ version: "10" }).setToken(this.token || "");
 
@@ -199,7 +205,7 @@ export class DiscordClient extends Client {
     }
   }
 
-  async unRegisterGlobalCommands(commands: SlashCommandBuilder[]) {
+  async unRegisterGlobalCommands(commands: AyocordSlashCommandBuilder[]) {
     const rest = new REST({ version: "10" }).setToken(this.token || "");
 
     try {

@@ -1,7 +1,7 @@
 {
   "name": "ayocord",
   "description": "This a wrapper under the discord.js. It simplify development",
-  "version": "1.5.2",
+  "version": "1.6.0",
   "main": "dist/index.js",
   "license": "MIT",
   "files": [

@@ -46,15 +46,17 @@ export class InteractionHandler extends BaseHandler implements IHandler {
       this.handleSubCommand(interaction);
     }
     if (interaction.isAutocomplete()) {
-      await this.handleAutoCompolete(interaction);
+      return await this.handleAutoCompolete(interaction);
     }
     if (
       interaction.isButton() ||
       interaction.isAnySelectMenu() ||
       interaction.isModalSubmit()
     ) {
-      await this.handleComponents(interaction);
-      await this.handleView(interaction);
+      return await Promise.all([
+        this.handleComponents(interaction),
+        this.handleView(interaction),
+      ])
     }
   }
 
@@ -106,7 +108,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
         : "";
 
       const subCommandFromCache = this.client.subCommands.get(
-        this.getSubCommand(commandName, subCommandGroupName, subCommandName)
+        this.getCommandName(commandName, subCommandGroupName, subCommandName)
       );
 
       if (!subCommandFromCache) {
@@ -123,14 +125,13 @@ export class InteractionHandler extends BaseHandler implements IHandler {
     }
   }
 
-  private getSubCommand(
+  private getCommandName(
     commandName: string,
     subCommandGroupName: string = "",
     subCommandName: string = ""
   ) {
-    return `${commandName}${
-      subCommandGroupName.length ? "_" + subCommandGroupName : ""
-    }${subCommandName.length ? "+" + subCommandName : ""}`;
+    return `${commandName}${subCommandGroupName.length ? "_" + subCommandGroupName : ""
+      }${subCommandName.length ? "+" + subCommandName : ""}`;
   }
 
   protected async handleView(
@@ -221,7 +222,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
         : "";
 
       const autoCompleteFromCache = this.client.autoComplete.get(
-        this.getSubCommand(commandName, subCommandGroupName, subCommandName)
+        this.getCommandName(commandName, subCommandGroupName, subCommandName)
       );
 
       if (!autoCompleteFromCache) {
