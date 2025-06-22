@@ -2,7 +2,10 @@ import { SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder, Snowflake } fr
 import { ModuleMetadataKeys } from "@/shared";
 import { DiscordClient } from "@/packages/client";
 
-export type AyocordSlashCommandBuilder = SlashCommandBuilder | SlashCommandSubcommandsOnlyBuilder
+/**
+ * I really don't how to typize this... :(
+ */
+export type AyocordSlashCommandBuilder = any
 
 export interface ISlashCommandSynchronizeOptions {
   /**
