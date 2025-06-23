@@ -127,7 +127,7 @@ export class DiscordClient extends Client {
   public async unregisterGlobalCommand(id: string) {
     const rest = new REST({ version: "10" }).setToken(this.token || "");
     try {
-      await rest.post(Routes.applicationCommand(this.user!.id, id));
+      await rest.delete(Routes.applicationCommand(this.user!.id, id));
     } catch (e) {
       this.logger?.error(`Failed to register global commands: ${e}`);
     }
@@ -150,7 +150,7 @@ export class DiscordClient extends Client {
   public async unregisterGuildCommand(guildId: Snowflake, id: Snowflake) {
     const rest = new REST({ version: "10" }).setToken(this.token || "");
     try {
-      await rest.post(
+      await rest.delete(
         Routes.applicationGuildCommand(this.user!.id, guildId, id),
       );
     } catch (e) {
