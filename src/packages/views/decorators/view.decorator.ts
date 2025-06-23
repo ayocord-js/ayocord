@@ -46,7 +46,7 @@ export const View = (options: IViewOptions) => {
     Reflect.defineMetadata(
       ViewMetadataKeys.VIEW_COMPONENTS,
       BaseCollector.getModuleMethods(BaseClass),
-      BaseClass
+      BaseClass,
     );
     Reflect.defineMetadata(ViewMetadataKeys.VIEW_CLASS, BaseClass, BaseClass);
     return class extends BaseClass {

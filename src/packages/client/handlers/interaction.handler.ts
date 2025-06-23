@@ -56,7 +56,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
       return await Promise.all([
         this.handleComponents(interaction),
         this.handleView(interaction),
-      ])
+      ]);
     }
   }
 
@@ -66,7 +66,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
    */
   protected async handleCommands(interaction: CommandInteraction) {
     const commandFromCache = this.client.slashCommands.get(
-      interaction.commandName
+      interaction.commandName,
     );
     if (commandFromCache) {
       const { options, module } =
@@ -94,10 +94,11 @@ export class InteractionHandler extends BaseHandler implements IHandler {
       const commandName = interaction.commandName;
 
       const hasSubCommandGroup = interaction.options.data.some(
-        (option) => option.type === ApplicationCommandOptionType.SubcommandGroup
+        (option) =>
+          option.type === ApplicationCommandOptionType.SubcommandGroup,
       );
       const hasSubCommand = interaction.options.data.some(
-        (option) => option.type === ApplicationCommandOptionType.Subcommand
+        (option) => option.type === ApplicationCommandOptionType.Subcommand,
       );
 
       const subCommandGroupName = hasSubCommandGroup
@@ -108,7 +109,11 @@ export class InteractionHandler extends BaseHandler implements IHandler {
         : "";
 
       const subCommandFromCache = this.client.subCommands.get(
-        InteractionHandler.getCommandName(commandName, subCommandGroupName, subCommandName)
+        InteractionHandler.getCommandName(
+          commandName,
+          subCommandGroupName,
+          subCommandName,
+        ),
       );
 
       if (!subCommandFromCache) {
@@ -128,7 +133,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
   public static getCommandName(
     commandName: string,
     subCommandGroupName = "",
-    subCommandName = ""
+    subCommandName = "",
   ) {
     const parts = [commandName];
     if (subCommandGroupName) parts.push(subCommandGroupName);
@@ -140,7 +145,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
     interaction:
       | ButtonInteraction
       | ModalSubmitInteraction
-      | AnySelectMenuInteraction
+      | AnySelectMenuInteraction,
   ) {
     const args = CustomIdParser.parseArguments(interaction.customId);
     const componentFromCache = this.client.views.get(args[0]);
@@ -172,7 +177,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
     interaction:
       | ButtonInteraction
       | ModalSubmitInteraction
-      | AnySelectMenuInteraction
+      | AnySelectMenuInteraction,
   ) {
     const args = CustomIdParser.parseArguments(interaction.customId);
 
@@ -210,10 +215,11 @@ export class InteractionHandler extends BaseHandler implements IHandler {
       const commandName = interaction.commandName;
 
       const hasSubCommandGroup = interaction.options.data.some(
-        (option) => option.type === ApplicationCommandOptionType.SubcommandGroup
+        (option) =>
+          option.type === ApplicationCommandOptionType.SubcommandGroup,
       );
       const hasSubCommand = interaction.options.data.some(
-        (option) => option.type === ApplicationCommandOptionType.Subcommand
+        (option) => option.type === ApplicationCommandOptionType.Subcommand,
       );
 
       const subCommandGroupName = hasSubCommandGroup
@@ -224,7 +230,11 @@ export class InteractionHandler extends BaseHandler implements IHandler {
         : "";
 
       const autoCompleteFromCache = this.client.autoComplete.get(
-        InteractionHandler.getCommandName(commandName, subCommandGroupName, subCommandName)
+        InteractionHandler.getCommandName(
+          commandName,
+          subCommandGroupName,
+          subCommandName,
+        ),
       );
 
       if (!autoCompleteFromCache) {

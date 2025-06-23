@@ -5,7 +5,7 @@ import { SlashCommandBuilder, Snowflake } from "discord.js";
 export type TGlobalCommands = AyocordSlashCommandBuilder[];
 export type TGuildCommands = Record<
   Snowflake,
-  { commands: (AyocordSlashCommandBuilder)[] }
+  { commands: AyocordSlashCommandBuilder[] }
 >;
 
 export interface ICommands {
@@ -23,7 +23,7 @@ export class CommandUtility {
    */
   static async getCommands(
     client: DiscordClient,
-    slashCommands: SlashCommandCollection
+    slashCommands: SlashCommandCollection,
   ): Promise<ICommands> {
     const globalCommands: TGlobalCommands = [];
     const guildCommands: TGuildCommands = {};
@@ -33,11 +33,13 @@ export class CommandUtility {
         const { builder, synchronize } = command.options;
         const syncOptions = await CommandUtility.resolveSyncOptions(
           client,
-          synchronize
+          synchronize,
         );
         const { guilds, global } = syncOptions;
 
-        if (global) globalCommands.push(builder);
+        if (global) {
+          globalCommands.push(builder);
+        }
 
         if (guilds?.length) {
           for (const guildId of guilds) {
@@ -47,7 +49,7 @@ export class CommandUtility {
             guildCommands[guildId].commands.push(builder);
           }
         }
-      })
+      }),
     );
 
     return { globalCommands, guildCommands };
@@ -56,26 +58,25 @@ export class CommandUtility {
   public static async synchronize(
     client: DiscordClient,
     commands: ICommands,
-    register: boolean
+    register: boolean,
   ) {
     const promises: Promise<any>[] = [];
     const { globalCommands, guildCommands } = commands;
 
     promises.push(
       register
-        ? client.registerGlobalCommands(globalCommands)
-        : client.unRegisterGlobalCommands(globalCommands)
+        ? client.replaceGlobalCommands(globalCommands)
+        : client.unRegisterGlobalCommands(globalCommands),
     );
 
     for (const guildId in guildCommands) {
       const commands = guildCommands[guildId].commands;
       promises.push(
         register
-          ? client.registerGuildCommands(guildId, commands)
-          : client.unRegisterGuildCommands(guildId, commands)
+          ? client.replaceGuildCommands(guildId, commands)
+          : client.unRegisterGuildCommands(guildId, commands),
       );
     }
-
     await Promise.allSettled(promises);
   }
 
@@ -86,11 +87,13 @@ export class CommandUtility {
    */
   private static async resolveSyncOptions(
     client: DiscordClient,
-    synchronize?: any
+    synchronize?: any,
   ) {
     if (!synchronize) return { guilds: [], global: true };
 
-    if (typeof synchronize.useAsync === "function") return synchronize.useAsync(client);
+    if (typeof synchronize.useAsync === "function") {
+      return await synchronize.useAsync(client);
+    }
 
     return synchronize.options;
   }

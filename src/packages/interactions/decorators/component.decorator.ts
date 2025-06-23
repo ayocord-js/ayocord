@@ -55,7 +55,7 @@ export const Component = (options: IComponentOptions) => {
       ModuleMetadataKeys.COMPONENT,
       options,
       target,
-      propertyKey
+      propertyKey,
     );
     descriptor.value = async function (interaction: TComponentInteraction) {
       try {
@@ -64,7 +64,7 @@ export const Component = (options: IComponentOptions) => {
         return result;
       } catch (e) {
         (interaction.client as DiscordClient).logger?.error(
-          `Error in Component method decorator: ${e}`
+          `Error in Component method decorator: ${e}`,
         );
       }
     };

@@ -13,79 +13,71 @@ export const Button = (options: IButtonOptions) => {
       ViewMetadataKeys.BUTTON,
       options,
       target,
-      propertyKey
+      propertyKey,
     );
     return descriptor;
   };
 };
 
-export const StringSelect = (
-  options: IStringSelectOptions
-) => {
+export const StringSelect = (options: IStringSelectOptions) => {
   return (
     target: Object,
     propertyKey: string,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) => {
     Reflect.defineMetadata(
       ViewMetadataKeys.STRINGSELECT,
       options,
       target,
-      propertyKey
+      propertyKey,
     );
     return descriptor;
   };
 };
 
-export const RoleSelect = (
-  options: IRoleSelectOptions
-) => {
+export const RoleSelect = (options: IRoleSelectOptions) => {
   return (
     target: Object,
     propertyKey: string,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) => {
     Reflect.defineMetadata(
       ViewMetadataKeys.ROLESELECT,
       options,
       target,
-      propertyKey
+      propertyKey,
     );
     return descriptor;
   };
 };
 
-export const ChannelSelect = (
-  options: IChannelSelectOptions
-) => {
+export const ChannelSelect = (options: IChannelSelectOptions) => {
   return (
     target: Object,
     propertyKey: string,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) => {
     Reflect.defineMetadata(
       ViewMetadataKeys.CHANNELSELECT,
       options,
       target,
-      propertyKey
+      propertyKey,
     );
     return descriptor;
   };
 };
 
-export const UserSelect = (
-  options: IUserSelectOptions
-) => {
+export const UserSelect = (options: IUserSelectOptions) => {
   return (
     target: Object,
     propertyKey: string,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) => {
     Reflect.defineMetadata(
       ViewMetadataKeys.USERSELECT,
       options,
       target,
-      propertyKey
+      propertyKey,
     );
     return descriptor;
   };

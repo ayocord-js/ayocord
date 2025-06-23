@@ -1,13 +1,13 @@
-import { DiscordClient } from "../client"
-import { TEntity } from "../types"
+import { DiscordClient } from "../client";
+import { TEntity } from "../types";
 
 export class BaseHandler {
-  protected client: DiscordClient
+  protected client: DiscordClient;
   constructor(client: DiscordClient) {
-    this.client = client
+    this.client = client;
   }
   protected getModuleFromCache(entity: TEntity): boolean {
-    const {module} = entity
-    return !!this.client.modules.get(module.name)?.isEnabled
+    const { module } = entity;
+    return !!this.client.modules.get(module.name)?.isEnabled;
   }
 }

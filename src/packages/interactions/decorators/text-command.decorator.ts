@@ -73,7 +73,7 @@ export const TextCommand = (options: ITextCommandOptions) => {
       ModuleMetadataKeys.TEXT_COMMAND,
       options,
       target,
-      propertyKey
+      propertyKey,
     );
     return descriptor;
   };

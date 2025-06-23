@@ -23,7 +23,7 @@ export class DiscordFactory {
 
   private static async connectModuleCollector(
     client: DiscordClient,
-    modules: DiscordModule[] = []
+    modules: DiscordModule[] = [],
   ) {
     const { collector } = client;
     const modules_ = modules.length ? modules : collector?.modules || [];
@@ -71,7 +71,7 @@ export class DiscordFactory {
 
   private static async connectCollectors(
     client: DiscordClient,
-    modules: DiscordModule[]
+    modules: DiscordModule[],
   ) {
     try {
       await this.connectModuleCollector(client, modules);
@@ -96,7 +96,7 @@ export class DiscordFactory {
     for (const key of Object.keys(bots)) {
       const bot = bots[key];
       const { options, modules: botModules } = bot;
-      if (!options.enabled) continue
+      if (!options.enabled) continue;
       const intents = [
         // @ts-ignore
         ...(defaultBotOptions?.options.intents || []),

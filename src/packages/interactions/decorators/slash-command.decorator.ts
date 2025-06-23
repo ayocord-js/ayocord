@@ -1,11 +1,15 @@
-import { SlashCommandBuilder, SlashCommandSubcommandsOnlyBuilder, Snowflake } from "discord.js";
+import {
+  SlashCommandBuilder,
+  SlashCommandSubcommandsOnlyBuilder,
+  Snowflake,
+} from "discord.js";
 import { ModuleMetadataKeys } from "@/shared";
 import { DiscordClient } from "@/packages/client";
 
 /**
  * I really don't how to typize this... :(
  */
-export type AyocordSlashCommandBuilder = any
+export type AyocordSlashCommandBuilder = any;
 
 export interface ISlashCommandSynchronizeOptions {
   /**
@@ -29,7 +33,9 @@ export interface ISlashCommandOptions {
     /**
      * A function to provide synchronization options asynchronously.
      */
-    useAsync?: (client?: DiscordClient) =>
+    useAsync?: (
+      client?: DiscordClient,
+    ) =>
       | Promise<ISlashCommandSynchronizeOptions>
       | ISlashCommandSynchronizeOptions;
 
@@ -42,7 +48,7 @@ export interface ISlashCommandOptions {
   /**
    * The builder used to define the slash command.
    */
-  builder: AyocordSlashCommandBuilder
+  builder: AyocordSlashCommandBuilder;
 
   /**
    * Indicates whether the command is restricted to developers only.
@@ -75,7 +81,7 @@ export const SlashCommand = (options: ISlashCommandOptions) => {
       ModuleMetadataKeys.SLASH_COMMAND,
       options,
       target,
-      propertyKey
+      propertyKey,
     );
     return descriptor;
   };

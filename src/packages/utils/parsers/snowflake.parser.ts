@@ -10,7 +10,7 @@ class SnowflakeParser {
   private static baseParser(
     regex: RegExp,
     content: string,
-    fallbackToGeneric = false
+    fallbackToGeneric = false,
   ): string[] | string {
     const find = [...content.matchAll(regex)];
     return find.length <= 0 && !fallbackToGeneric
@@ -55,7 +55,7 @@ class SnowflakeParser {
    */
   static mention(
     snowflake: Snowflake | null,
-    type: SnowflakeMentionType
+    type: SnowflakeMentionType,
   ): string | null {
     if (!snowflake) return null;
     switch (type) {

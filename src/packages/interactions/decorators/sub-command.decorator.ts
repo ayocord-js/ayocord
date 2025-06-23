@@ -15,7 +15,7 @@ export const SubCommand = (options: ISubCommandOptions) => {
       ModuleMetadataKeys.SUB_COMMAND,
       options,
       target,
-      propertyKey
+      propertyKey,
     );
     return descriptor;
   };

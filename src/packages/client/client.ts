@@ -24,16 +24,13 @@ import {
   AyocordSlashCommandBuilder,
 } from "@/packages";
 import { CommandUtility } from "@/packages";
-import {
-  handlers,
-} from "./handlers";
+import { handlers } from "./handlers";
 
 /**
  * Custom Discord Client class that extends the base Client functionality.
  * Includes support for modular architecture, command collections, and enhanced logging.
  */
 export class DiscordClient extends Client {
-
   public modules: ModuleCollection;
   public slashCommands: SlashCommandCollection;
   public subCommands: SubCommandCollection;
@@ -46,8 +43,8 @@ export class DiscordClient extends Client {
    */
   public views: ViewCollection;
 
-  public type?: ClientType
-  public enabled?: boolean
+  public type?: ClientType;
+  public enabled?: boolean;
   public applicationName?: string;
   public version?: string;
   public devs?: Snowflake[];
@@ -58,7 +55,6 @@ export class DiscordClient extends Client {
   public collector?: IDiscordClientCollector;
   public handlers?: IDiscordClientHandler;
 
-
   /**
    * Initializes a new instance of DiscordClient.
    * @param options - Options for configuring the client, including modules, commands, and logger.
@@ -66,8 +62,10 @@ export class DiscordClient extends Client {
   constructor(options: IDiscordClientOptions) {
     super({ ...options, intents: options.intents ?? [] });
 
-    this.type = typeof options.type === "undefined" ? "singletoken" : options.type
-    this.enabled = typeof options.enabled === "undefined" ? true : options.enabled
+    this.type =
+      typeof options.type === "undefined" ? "singletoken" : options.type;
+    this.enabled =
+      typeof options.enabled === "undefined" ? true : options.enabled;
     this.modules = new Collection();
     this.events = new Collection();
     this.slashCommands = new Collection();
@@ -80,9 +78,9 @@ export class DiscordClient extends Client {
 
     this.handlers = options.handlers
       ? {
-        ...handlers,
-        ...options.handlers,
-      }
+          ...handlers,
+          ...options.handlers,
+        }
       : handlers;
     this.collector = options.collector;
 
@@ -95,11 +93,76 @@ export class DiscordClient extends Client {
     this.token = options.token ?? null;
   }
 
+  public async getGlobalCommands() {
+    const rest = new REST({ version: "10" }).setToken(this.token || "");
+    try {
+      return await rest.get(Routes.applicationCommands(this.user!.id));
+    } catch (e) {
+      this.logger?.error(`Failed to register global commands: ${e}`);
+    }
+  }
+
+  public async getGuildCommands(guildId: Snowflake) {
+    const rest = new REST({ version: "10" }).setToken(this.token || "");
+    try {
+      return await rest.get(
+        Routes.applicationGuildCommands(this.user!.id, guildId),
+      );
+    } catch (e) {
+      this.logger?.error(`Failed to register global commands: ${e}`);
+    }
+  }
+
+  public async registerGlobalCommand(command: AyocordSlashCommandBuilder) {
+    const rest = new REST({ version: "10" }).setToken(this.token || "");
+    try {
+      await rest.post(Routes.applicationCommands(this.user!.id), {
+        body: command,
+      });
+    } catch (e) {
+      this.logger?.error(`Failed to register global commands: ${e}`);
+    }
+  }
+
+  public async unregisterGlobalCommand(id: string) {
+    const rest = new REST({ version: "10" }).setToken(this.token || "");
+    try {
+      await rest.post(Routes.applicationCommand(this.user!.id, id));
+    } catch (e) {
+      this.logger?.error(`Failed to register global commands: ${e}`);
+    }
+  }
+
+  public async registerGuildCommand(
+    guildId: Snowflake,
+    command: AyocordSlashCommandBuilder,
+  ) {
+    const rest = new REST({ version: "10" }).setToken(this.token || "");
+    try {
+      await rest.post(Routes.applicationGuildCommands(this.user!.id, guildId), {
+        body: command,
+      });
+    } catch (e) {
+      this.logger?.error(`Failed to register global commands: ${e}`);
+    }
+  }
+
+  public async unregisterGuildCommand(guildId: Snowflake, id: Snowflake) {
+    const rest = new REST({ version: "10" }).setToken(this.token || "");
+    try {
+      await rest.post(
+        Routes.applicationGuildCommand(this.user!.id, guildId, id),
+      );
+    } catch (e) {
+      this.logger?.error(`Failed to register global commands: ${e}`);
+    }
+  }
+
   /**
    * Registers global slash commands for the bot.
    * @param commands - An array of SlashCommandBuilder instances to register.
    */
-  public async registerGlobalCommands(commands: AyocordSlashCommandBuilder[]) {
+  public async replaceGlobalCommands(commands: AyocordSlashCommandBuilder[]) {
     const rest = new REST({ version: "10" }).setToken(this.token || "");
     try {
       await rest.put(Routes.applicationCommands(this.user!.id), {
@@ -118,9 +181,9 @@ export class DiscordClient extends Client {
    * @param guildId - The ID of the guild where the commands will be registered.
    * @param commands - An array of SlashCommandBuilder instances to register.
    */
-  public async registerGuildCommands(
+  public async replaceGuildCommands(
     guildId: Snowflake,
-    commands: AyocordSlashCommandBuilder[]
+    commands: AyocordSlashCommandBuilder[],
   ) {
     const rest = new REST({ version: "10" }).setToken(this.token || "");
     try {
@@ -130,7 +193,7 @@ export class DiscordClient extends Client {
       return commands;
     } catch (e) {
       this.logger?.error(
-        `Failed to register guild commands for ${guildId}: ${e}`
+        `Failed to register guild commands for ${guildId}: ${e}`,
       );
     }
   }
@@ -139,7 +202,6 @@ export class DiscordClient extends Client {
    * Logs the client in and synchronizes commands if enabled.
    */
   public async login(token?: string): Promise<string> {
-
     if (!this.enabled && this.type === "singletoken") {
       throw new Error("Main client is disabled");
     }
@@ -176,14 +238,14 @@ export class DiscordClient extends Client {
    */
   public async unRegisterGuildCommands(
     guildId: Snowflake,
-    commands: AyocordSlashCommandBuilder[]
+    commands: AyocordSlashCommandBuilder[],
   ) {
     const rest = new REST({ version: "10" }).setToken(this.token || "");
 
     try {
       // Fetch existing commands from the guild
       const existingCommands: ApplicationCommand[] = (await rest.get(
-        Routes.applicationGuildCommands(this.user!.id, guildId)
+        Routes.applicationGuildCommands(this.user!.id, guildId),
       )) as ApplicationCommand[];
 
       // Extract command names from the provided builders
@@ -191,7 +253,7 @@ export class DiscordClient extends Client {
 
       // Filter existing commands to keep only those not in the removal list
       const updatedCommands = existingCommands.filter(
-        (cmd) => !commandNamesToRemove.includes(cmd.name)
+        (cmd) => !commandNamesToRemove.includes(cmd.name),
       );
 
       // Update the guild's commands with the filtered list
@@ -200,18 +262,20 @@ export class DiscordClient extends Client {
       });
     } catch (e) {
       this.logger?.error(
-        `Failed to unregister guild commands for ${guildId}: ${e}`
+        `Failed to unregister guild commands for ${guildId}: ${e}`,
       );
     }
   }
 
-  public async unRegisterGlobalCommands(commands: AyocordSlashCommandBuilder[]) {
+  public async unRegisterGlobalCommands(
+    commands: AyocordSlashCommandBuilder[],
+  ) {
     const rest = new REST({ version: "10" }).setToken(this.token || "");
 
     try {
       // Fetch existing commands from the guild
       const existingCommands: any[] = (await rest.get(
-        Routes.applicationCommands(this.user!.id)
+        Routes.applicationCommands(this.user!.id),
       )) as any[];
 
       // Extract command names from the provided builders
@@ -219,7 +283,7 @@ export class DiscordClient extends Client {
 
       // Filter existing commands to keep only those not in the removal list
       const updatedCommands = existingCommands.filter(
-        (cmd) => !commandNamesToRemove.includes(cmd.name)
+        (cmd) => !commandNamesToRemove.includes(cmd.name),
       );
 
       // Update the guild's commands with the filtered list

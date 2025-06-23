@@ -16,7 +16,7 @@ export class DiscohookParser {
         const jsonResponse = await response.json();
         base = jsonResponse.data;
       } else {
-        throw Error("Url must include /share.discohook.app/")
+        throw Error("Url must include /share.discohook.app/");
       }
 
       if (base) {

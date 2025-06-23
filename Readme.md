@@ -81,7 +81,6 @@ One class = one module (cog in python sleng), however I hate python and love Typ
 **Recommended**
 
 - Methods
-
   - [x] Event
   - [x] Component
   - [x] SlashCommand

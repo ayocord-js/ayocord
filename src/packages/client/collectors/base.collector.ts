@@ -39,7 +39,7 @@ export class BaseCollector {
           const module = await import(absolutePath);
           modules.push(module);
         } catch {}
-      })
+      }),
     );
     return modules.map((module) => Object.values(module));
   }
@@ -53,9 +53,8 @@ export class BaseCollector {
   protected getMetadata<T>(
     target: Object,
     metadataKey: string,
-    propertyKey?: string | symbol
+    propertyKey?: string | symbol,
   ): T | null {
-
     if (propertyKey !== undefined) {
       return Reflect.getMetadata(metadataKey, target, propertyKey) || null;
     }

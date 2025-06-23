@@ -1,9 +1,7 @@
 import { DiscordClient, IModule } from "@/packages/client";
 import { ModuleMetadataKeys } from "@/shared";
-import { CommandUtility } from "@/packages/slash-commands";
 import { DiscordModule } from "../types";
 
-/** Utility for managing modules */
 export class ModuleUtility {
   client: DiscordClient;
 
@@ -15,7 +13,8 @@ export class ModuleUtility {
     const moduleName =
       typeof module === "string"
         ? module
-        : Reflect.getMetadata(ModuleMetadataKeys.MODULE, module.prototype)?.name;
+        : Reflect.getMetadata(ModuleMetadataKeys.MODULE, module.prototype)
+            ?.name;
 
     if (!moduleName) return null;
     return this.client.modules.get(moduleName) || null;
@@ -36,16 +35,6 @@ export class ModuleUtility {
           this.client.removeListener(options.name, executor);
         }
       });
-  }
-
-  private async manageCommands(module: IModule, register: boolean) {
-    const commands = await CommandUtility.getCommands(
-      this.client,
-      this.client.slashCommands.filter(
-        (command) => command.module.name === module.module.name
-      )
-    );
-    await CommandUtility.synchronize(this.client, commands, register);
   }
 
   public async moduleEnable(name: string | Function) {
@@ -70,7 +59,6 @@ export class ModuleUtility {
         isEnabled: true,
       }),
       this.manageEvents(module, true),
-      this.manageCommands(module, true),
     ]);
     return true;
   }
@@ -97,24 +85,25 @@ export class ModuleUtility {
         isEnabled: false,
       }),
       this.manageEvents(module, false),
-      await this.manageCommands(module, false),
     ]);
     return true;
   }
 
   public getModules() {
-    return this.client.modules
+    return this.client.modules;
   }
 
   public getEnabledModules() {
-    return this.getModules().filter(module => module.isEnabled)
+    return this.getModules().filter((module) => module.isEnabled);
   }
 
   public getDisabledModules() {
-    return this.getModules().filter(module => !module.isEnabled)
+    return this.getModules().filter((module) => !module.isEnabled);
   }
 
   public getModuleByName(name: string) {
-    return this.getModules().find(mod => mod.module.name.toLowerCase() === name.toLowerCase())
+    return this.getModules().find(
+      (mod) => mod.module.name.toLowerCase() === name.toLowerCase(),
+    );
   }
 }

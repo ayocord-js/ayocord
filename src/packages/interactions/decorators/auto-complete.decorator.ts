@@ -15,7 +15,7 @@ export const AutoComplete = (options: IAutoCompleteOptions) => {
       ModuleMetadataKeys.AUTO_COMPLETE,
       options,
       target,
-      propertyKey
+      propertyKey,
     );
     return descriptor;
   };

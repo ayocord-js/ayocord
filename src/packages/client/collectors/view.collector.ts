@@ -23,9 +23,9 @@ export class ViewDiscordCollector extends BaseCollector implements ICollector {
         const methodMetadata = Reflect.getMetadata(
           key,
           view.prototype,
-          method.key
+          method.key,
         ) as IBaseViewComponent<ButtonBuilder>;
-        if (!methodMetadata) continue
+        if (!methodMetadata) continue;
         const { row: position, builder } = methodMetadata;
         if (key === ViewMetadataKeys.BUTTON) {
           const row = new ActionRowBuilder().addComponents(builder);
@@ -56,14 +56,14 @@ export class ViewDiscordCollector extends BaseCollector implements ICollector {
             this.processView(value);
           }
         });
-      })
+      }),
     );
   }
-  
+
   private async processView(module: any) {
     const metadata = this.getMetadata<IViewOptions>(
       module,
-      ViewMetadataKeys.VIEW
+      ViewMetadataKeys.VIEW,
     );
     if (!metadata) return;
 
@@ -84,11 +84,11 @@ export class ViewDiscordCollector extends BaseCollector implements ICollector {
         const methodMetadata = Reflect.getMetadata(
           key,
           baseClass.prototype,
-          method.key
+          method.key,
         );
         if (!methodMetadata) continue;
         const component = methodMetadata;
-        const customId = (component.builder?.toJSON())?.custom_id;
+        const customId = component.builder?.toJSON()?.custom_id;
         const boundMethod = method.method.bind(module);
         this.client.views.set(customId, {
           options: {

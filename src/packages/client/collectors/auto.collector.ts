@@ -36,12 +36,12 @@ export class AutoDiscordCollector extends BaseCollector {
     await Promise.allSettled(
       modules.map((module) => {
         module.map((value: any) => {
-          const isValid = this.isValidClass(value, ModuleMetadataKeys.MODULE)
+          const isValid = this.isValidClass(value, ModuleMetadataKeys.MODULE);
           if (isValid) {
             this.processModule(value);
           }
         });
-      })
+      }),
     );
   }
 
@@ -52,7 +52,7 @@ export class AutoDiscordCollector extends BaseCollector {
   protected async processModule(module: any): Promise<void> {
     const moduleMetadata = this.getMetadata(
       module,
-      ModuleMetadataKeys.MODULE
+      ModuleMetadataKeys.MODULE,
     ) as IModuleOptions;
 
     const methods = BaseCollector.getModuleMethods(module);
@@ -69,7 +69,7 @@ export class AutoDiscordCollector extends BaseCollector {
         for (const key of Object.values(ModuleMetadataKeys)) {
           await this.addHandler(moduleInstance, method, key, moduleMetadata);
         }
-      })
+      }),
     );
   }
 
@@ -84,20 +84,24 @@ export class AutoDiscordCollector extends BaseCollector {
     moduleInstance: any,
     method: IDecoratorMetadataKeys,
     metadataKey: ModuleMetadataKeys | ViewMetadataKeys,
-    moduleMetadata: IModuleOptions
+    moduleMetadata: IModuleOptions,
   ): Promise<void> {
-    const metadata = Reflect.getMetadata(metadataKey, moduleInstance, method.key)
+    const metadata = Reflect.getMetadata(
+      metadataKey,
+      moduleInstance,
+      method.key,
+    );
 
     if (!metadata) {
-      return
-    };
+      return;
+    }
 
     const boundMethod = (method.method as Function).bind(moduleInstance);
 
     const handlerId = this.generateHandlerId(
       metadataKey,
       metadata,
-      moduleMetadata
+      moduleMetadata,
     );
 
     const handlerMap = this.getHandlerMap(metadataKey);
@@ -119,7 +123,7 @@ export class AutoDiscordCollector extends BaseCollector {
   private generateHandlerId(
     metadataKey: ModuleMetadataKeys | ViewMetadataKeys,
     metadata: any,
-    moduleMetadata: IModuleOptions
+    moduleMetadata: IModuleOptions,
   ): string {
     switch (metadataKey) {
       case ModuleMetadataKeys.EVENT:
@@ -131,9 +135,17 @@ export class AutoDiscordCollector extends BaseCollector {
       case ModuleMetadataKeys.TEXT_COMMAND:
         return metadata.name.toLowerCase();
       case ModuleMetadataKeys.SUB_COMMAND:
-        return InteractionHandler.getCommandName(metadata.parentName, metadata.groupName, metadata.name);
+        return InteractionHandler.getCommandName(
+          metadata.parentName,
+          metadata.groupName,
+          metadata.name,
+        );
       case ModuleMetadataKeys.AUTO_COMPLETE:
-        return InteractionHandler.getCommandName(metadata.parentName, metadata.groupName, metadata.name);
+        return InteractionHandler.getCommandName(
+          metadata.parentName,
+          metadata.groupName,
+          metadata.name,
+        );
       default:
         return moduleMetadata.name;
     }
@@ -145,7 +157,7 @@ export class AutoDiscordCollector extends BaseCollector {
    * @returns The corresponding handler map or null if not found.
    */
   private getHandlerMap(
-    metadataKey: ModuleMetadataKeys | ViewMetadataKeys
+    metadataKey: ModuleMetadataKeys | ViewMetadataKeys,
   ): Map<string, any> | null {
     switch (metadataKey) {
       case ModuleMetadataKeys.EVENT:

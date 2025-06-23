@@ -115,7 +115,7 @@ export interface IDiscordClientOptions extends ClientOptions {
   /**
    * Internal option, I recommend not touch this
    */
-  readonly type?: ClientType
+  readonly type?: ClientType;
   /**
    * The version of your bot
    * You can access this property for show it your users (by default undefined)
@@ -171,7 +171,7 @@ export interface IDiscordClientOptions extends ClientOptions {
    * Needs when you want to enable or disable your bot
    * For example, this option can be used for development bot or you want check if this bot online
    */
-  readonly enabled?: boolean
+  readonly enabled?: boolean;
 }
 
 export type TEntity =
@@ -181,4 +181,4 @@ export type TEntity =
   | ITextCommandEntity
   | ISlashCommandEntity;
 
-export type ClientType = "multitoken" | "singletoken"
+export type ClientType = "multitoken" | "singletoken";

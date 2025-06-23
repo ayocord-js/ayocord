@@ -5,7 +5,7 @@ export const Guard = (...guards: (new () => CanUse)[]) => {
   return (
     _target: any,
     _propertyKey: string,
-    descriptor: PropertyDescriptor
+    descriptor: PropertyDescriptor,
   ) => {
     const originalMethod = descriptor.value;
 
