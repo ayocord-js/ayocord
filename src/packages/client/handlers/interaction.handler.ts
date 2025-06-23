@@ -108,7 +108,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
         : "";
 
       const subCommandFromCache = this.client.subCommands.get(
-        this.getCommandName(commandName, subCommandGroupName, subCommandName)
+        InteractionHandler.getCommandName(commandName, subCommandGroupName, subCommandName)
       );
 
       if (!subCommandFromCache) {
@@ -125,13 +125,15 @@ export class InteractionHandler extends BaseHandler implements IHandler {
     }
   }
 
-  private getCommandName(
+  public static getCommandName(
     commandName: string,
-    subCommandGroupName: string = "",
-    subCommandName: string = ""
+    subCommandGroupName = "",
+    subCommandName = ""
   ) {
-    return `${commandName}${subCommandGroupName.length ? "_" + subCommandGroupName : ""
-      }${subCommandName.length ? "+" + subCommandName : ""}`;
+    const parts = [commandName];
+    if (subCommandGroupName) parts.push(subCommandGroupName);
+    if (subCommandName) parts.push(subCommandName);
+    return parts.join("_");
   }
 
   protected async handleView(
@@ -222,7 +224,7 @@ export class InteractionHandler extends BaseHandler implements IHandler {
         : "";
 
       const autoCompleteFromCache = this.client.autoComplete.get(
-        this.getCommandName(commandName, subCommandGroupName, subCommandName)
+        InteractionHandler.getCommandName(commandName, subCommandGroupName, subCommandName)
       );
 
       if (!autoCompleteFromCache) {

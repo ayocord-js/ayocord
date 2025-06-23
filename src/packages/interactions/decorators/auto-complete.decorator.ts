@@ -6,7 +6,7 @@ export interface IAutoCompleteOptions {
    */
   parentName: string;
   groupName?: string;
-  subCommandName?: string;
+  name?: string;
 }
 
 export const AutoComplete = (options: IAutoCompleteOptions) => {

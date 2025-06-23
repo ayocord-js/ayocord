@@ -99,7 +99,7 @@ export class DiscordClient extends Client {
    * Registers global slash commands for the bot.
    * @param commands - An array of SlashCommandBuilder instances to register.
    */
-  async registerGlobalCommands(commands: AyocordSlashCommandBuilder[]) {
+  public async registerGlobalCommands(commands: AyocordSlashCommandBuilder[]) {
     const rest = new REST({ version: "10" }).setToken(this.token || "");
     try {
       await rest.put(Routes.applicationCommands(this.user!.id), {
@@ -118,7 +118,7 @@ export class DiscordClient extends Client {
    * @param guildId - The ID of the guild where the commands will be registered.
    * @param commands - An array of SlashCommandBuilder instances to register.
    */
-  async registerGuildCommands(
+  public async registerGuildCommands(
     guildId: Snowflake,
     commands: AyocordSlashCommandBuilder[]
   ) {
@@ -174,7 +174,7 @@ export class DiscordClient extends Client {
    * @param commands - An array of SlashCommandBuilder instances to unregister.
    * @param token - The bot token for authentication.
    */
-  async unRegisterGuildCommands(
+  public async unRegisterGuildCommands(
     guildId: Snowflake,
     commands: AyocordSlashCommandBuilder[]
   ) {
@@ -205,7 +205,7 @@ export class DiscordClient extends Client {
     }
   }
 
-  async unRegisterGlobalCommands(commands: AyocordSlashCommandBuilder[]) {
+  public async unRegisterGlobalCommands(commands: AyocordSlashCommandBuilder[]) {
     const rest = new REST({ version: "10" }).setToken(this.token || "");
 
     try {

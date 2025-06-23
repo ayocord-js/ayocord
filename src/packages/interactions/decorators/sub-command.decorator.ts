@@ -13,8 +13,8 @@ export const SubCommand = (options: ISubCommandOptions) => {
   return (target: any, propertyKey: string, descriptor: PropertyDescriptor) => {
     Reflect.defineMetadata(
       ModuleMetadataKeys.SUB_COMMAND,
-      target,
       options,
+      target,
       propertyKey
     );
     return descriptor;

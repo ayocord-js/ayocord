@@ -7,6 +7,7 @@ import {
 } from "../../../shared/types/metadata-keys.enum";
 import { IModuleOptions } from "@/packages/modules/decorators";
 import { BaseCollector } from "./base.collector";
+import { InteractionHandler } from "@/packages";
 
 /**
  * Represents metadata associated with a class or method decorated with specific keys.
@@ -85,13 +86,11 @@ export class AutoDiscordCollector extends BaseCollector {
     metadataKey: ModuleMetadataKeys | ViewMetadataKeys,
     moduleMetadata: IModuleOptions
   ): Promise<void> {
-    const metadata = Reflect.getMetadata(
-      metadataKey,
-      moduleInstance,
-      method.key
-    );
+    const metadata = Reflect.getMetadata(metadataKey, moduleInstance, method.key)
 
-    if (!metadata) return;
+    if (!metadata) {
+      return
+    };
 
     const boundMethod = (method.method as Function).bind(moduleInstance);
 
@@ -131,12 +130,10 @@ export class AutoDiscordCollector extends BaseCollector {
         return metadata.builder.name.toLowerCase();
       case ModuleMetadataKeys.TEXT_COMMAND:
         return metadata.name.toLowerCase();
-      case ModuleMetadataKeys.AUTO_COMPLETE:
-        return `${metadata.parentName}_${metadata.groupName || ""}_${
-          metadata.subCommandName || ""
-        }`.replace(/__+/g, "_");
       case ModuleMetadataKeys.SUB_COMMAND:
-        return `${metadata.parentName}_${metadata.groupName || ""}_$`;
+        return InteractionHandler.getCommandName(metadata.parentName, metadata.groupName, metadata.name);
+      case ModuleMetadataKeys.AUTO_COMPLETE:
+        return InteractionHandler.getCommandName(metadata.parentName, metadata.groupName, metadata.name);
       default:
         return moduleMetadata.name;
     }
