@@ -111,6 +111,10 @@ export class ModuleUtility {
   }
 
   public getDisabledModules() {
-    return this.getModules().filter(module => module.isEnabled)
+    return this.getModules().filter(module => !module.isEnabled)
+  }
+
+  public getModuleByName(name: string) {
+    return this.getModules().find(mod => mod.module.name.toLowerCase() === name.toLowerCase())
   }
 }
