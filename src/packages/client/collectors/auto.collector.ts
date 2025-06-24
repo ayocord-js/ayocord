@@ -58,6 +58,10 @@ export class AutoDiscordCollector extends BaseCollector {
     const methods = BaseCollector.getModuleMethods(module);
     const moduleInstance = new module();
 
+    if (moduleInstance?.onInit) {
+      await moduleInstance?.onInit(this.client)
+    }
+
     this.client.modules.set(moduleMetadata.name, {
       module: moduleMetadata,
       instance: moduleInstance,
