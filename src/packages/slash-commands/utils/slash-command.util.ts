@@ -63,19 +63,23 @@ export class CommandUtility {
     const promises: Promise<any>[] = [];
     const { globalCommands, guildCommands } = commands;
 
-    promises.push(
+    if (client.synchronize?.global) {
+      promises.push(
       register
         ? client.replaceGlobalCommands(globalCommands)
         : client.unRegisterGlobalCommands(globalCommands),
-    );
-
-    for (const guildId in guildCommands) {
-      const commands = guildCommands[guildId].commands;
-      promises.push(
-        register
-          ? client.replaceGuildCommands(guildId, commands)
-          : client.unRegisterGuildCommands(guildId, commands),
       );
+    }
+
+    if (client.synchronize?.guild) {
+      for (const guildId in guildCommands) {
+        const commands = guildCommands[guildId].commands;
+        promises.push(
+          register
+            ? client.replaceGuildCommands(guildId, commands)
+            : client.unRegisterGuildCommands(guildId, commands),
+        );
+      }
     }
     await Promise.allSettled(promises);
   }
