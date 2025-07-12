@@ -1,8 +1,8 @@
-<div align="center">
-  <a href="https://www.ayocord.tech/">
-    <img src="https://imgur.com/mCLyhj2.png">
-  </a>
-</div>
+# DO NOT USE THIS PACKAGE
+
+If you randomly enter to this page, DO NOT DOWNLOAD THIS PACKAGE <br>
+This package is not tested as well and has too many bugs. I was beginner while writting this package <br>
+I've thoughts to make v2 with rewritten, but for now... DO NOT USE IT
 
 # Introduction
 
